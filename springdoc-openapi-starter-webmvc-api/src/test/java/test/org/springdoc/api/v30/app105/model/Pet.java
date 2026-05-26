@@ -219,6 +219,7 @@ public class Pet {
 
 		private final String value;
 
+		@JsonCreator
 		StatusEnum(String value) {
 			this.value = value;
 		}

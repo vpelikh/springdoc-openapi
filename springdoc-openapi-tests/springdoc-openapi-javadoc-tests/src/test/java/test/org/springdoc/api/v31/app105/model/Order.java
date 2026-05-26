@@ -322,6 +322,7 @@ public class Order {
 		 *
 		 * @param value the value
 		 */
+		@JsonCreator
 		StatusEnum(String value) {
 			this.value = value;
 		}

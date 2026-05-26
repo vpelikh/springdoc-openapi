@@ -37,8 +37,8 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.introspect.BeanPropertyDefinition;
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ModelConverter;
 import io.swagger.v3.core.converter.ModelConverterContext;
@@ -268,15 +268,15 @@ public class PolymorphicModelConverter implements ModelConverter {
 	 */
 	private List<BeanPropertyBiDefinition> introspectBeanProperties(JavaType javaType) {
 		Map<String, BeanPropertyDefinition> forSerializationProps =
-				springDocObjectMapper.jsonMapper()
-						.getSerializationConfig()
+				/* TODO serializationConfig() is not to be used by application code in Jackson 3 (see https://github.com/FasterXML/jackson-databind/blob/3.x/src/main/java/tools/jackson/databind/ObjectMapper.java#L417). Consider using builder configuration instead. */springDocObjectMapper.jsonMapper()
+						.serializationConfig()
 						.introspect(javaType)
 						.findProperties()
 						.stream()
 						.collect(toMap(BeanPropertyDefinition::getName, identity()));
 		Map<String, BeanPropertyDefinition> forDeserializationProps =
-				springDocObjectMapper.jsonMapper()
-						.getDeserializationConfig()
+				/* TODO deserializationConfig() is not to be used by application code in Jackson 3 (see https://github.com/FasterXML/jackson-databind/blob/3.x/src/main/java/tools/jackson/databind/ObjectMapper.java#L427). Consider using builder configuration instead. */springDocObjectMapper.jsonMapper()
+						.deserializationConfig()
 						.introspect(javaType)
 						.findProperties()
 						.stream()

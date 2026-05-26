@@ -28,6 +28,7 @@ package test.org.springdoc.api.v30.app5.entities;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import jakarta.validation.constraints.NotNull;
@@ -47,6 +48,7 @@ public class CompanyDto extends RepresentationModel<CompanyDto> {
 	@NotNull
 	private String name;
 
+	@JsonCreator
 	private CompanyDto(Builder builder) {
 		setId(builder.id);
 		setName(builder.name);

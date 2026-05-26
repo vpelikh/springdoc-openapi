@@ -26,7 +26,6 @@
 
 package org.springdoc.core.service;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
@@ -79,6 +78,7 @@ import org.springdoc.core.utils.Constants;
 import org.springdoc.core.utils.PropertyResolverUtils;
 import org.springdoc.core.utils.SpringDocAnnotationsUtils;
 import org.springdoc.core.utils.SpringDocUtils;
+import tools.jackson.core.JacksonException;
 
 import org.springframework.beans.factory.config.BeanExpressionContext;
 import org.springframework.beans.factory.config.BeanExpressionResolver;
@@ -288,7 +288,7 @@ public class GenericParameterService {
 			try {
 				parameter.setExample(objectMapperProvider.jsonMapper().readTree(parameterDoc.example()));
 			}
-			catch (IOException e) {
+			catch (JacksonException e) {
 				parameter.setExample(parameterDoc.example());
 			}
 		}

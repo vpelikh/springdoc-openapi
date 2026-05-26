@@ -26,6 +26,7 @@
 
 package test.org.springdoc.api.v30.app127;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -58,6 +59,7 @@ public abstract class AbstractObject {
 	 * @param type the type
 	 * @param name the name
 	 */
+	@JsonCreator
 	protected AbstractObject(ConcreteType type, String name) {
 		this.type = type;
 		this.name = name;

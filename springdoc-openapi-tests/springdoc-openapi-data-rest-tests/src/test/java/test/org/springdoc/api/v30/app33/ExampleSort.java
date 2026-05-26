@@ -28,6 +28,7 @@ package test.org.springdoc.api.v30.app33;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.Parameter;
 
@@ -39,6 +40,7 @@ public class ExampleSort extends Sort {
 	@JsonProperty
 	private int something;
 
+	@JsonCreator
 	protected ExampleSort(List<Order> orders) {
 		super(orders);
 	}
