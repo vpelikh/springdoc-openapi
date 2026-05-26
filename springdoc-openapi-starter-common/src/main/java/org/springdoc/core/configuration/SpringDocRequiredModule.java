@@ -26,8 +26,8 @@
 
 package org.springdoc.core.configuration;
 
-import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.introspect.AnnotatedMember;
+import tools.jackson.databind.module.SimpleModule;
 import io.swagger.v3.core.jackson.SwaggerAnnotationIntrospector;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.apache.commons.lang3.StringUtils;

@@ -26,7 +26,7 @@
 
 package org.springdoc.core.configuration;
 
-import com.fasterxml.jackson.module.kotlin.KotlinModule;
+import tools.jackson.module.kotlin.KotlinModule;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.providers.ObjectMapperProvider;
 

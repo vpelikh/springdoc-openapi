@@ -9,6 +9,7 @@ public enum FooBar {
 
 	private String value;
 
+	@JsonCreator
 	FooBar(String value) {
 		this.value = value;
 	}

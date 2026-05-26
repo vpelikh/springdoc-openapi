@@ -207,6 +207,7 @@ public class Order {
 
 		private String value;
 
+		@JsonCreator
 		StatusEnum(String value) {
 			this.value = value;
 		}

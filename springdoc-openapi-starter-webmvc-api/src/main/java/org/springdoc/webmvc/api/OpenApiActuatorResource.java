@@ -28,7 +28,6 @@ package org.springdoc.webmvc.api;
 
 import java.util.Locale;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springdoc.core.customizers.SpringDocCustomizers;
@@ -38,6 +37,7 @@ import org.springdoc.core.service.AbstractRequestService;
 import org.springdoc.core.service.GenericResponseService;
 import org.springdoc.core.service.OpenAPIService;
 import org.springdoc.core.service.OperationService;
+import tools.jackson.core.JacksonException;
 
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
@@ -107,12 +107,12 @@ public class OpenApiActuatorResource extends OpenApiResource {
 	 * @param request the request
 	 * @param locale  the locale
 	 * @return the string
-	 * @throws JsonProcessingException the json processing exception
+	 * @throws JacksonException the json processing exception
 	 */
 	@Operation(hidden = true)
 	@GetMapping(value = DEFAULT_PATH_SEPARATOR, produces = MediaType.APPLICATION_JSON_VALUE)
 	public byte[] openapiJson(HttpServletRequest request, Locale locale)
-			throws JsonProcessingException {
+			throws JacksonException {
 		return super.openapiJson(request, EMPTY, locale);
 	}
 
@@ -123,12 +123,12 @@ public class OpenApiActuatorResource extends OpenApiResource {
 	 * @param request the request
 	 * @param locale  the locale
 	 * @return the string
-	 * @throws JsonProcessingException the json processing exception
+	 * @throws JacksonException the json processing exception
 	 */
 	@Operation(hidden = true)
 	@GetMapping(value = DEFAULT_YAML_API_DOCS_ACTUATOR_PATH, produces = APPLICATION_OPENAPI_YAML)
 	public byte[] openapiYaml(HttpServletRequest request, Locale locale)
-			throws JsonProcessingException {
+			throws JacksonException {
 		return super.openapiYaml(request, YAML, locale);
 	}
 

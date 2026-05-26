@@ -43,8 +43,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem.HttpMethod;
@@ -52,6 +53,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.ai.customizers.McpToolDefinitionContext;
 import org.springdoc.ai.properties.SpringDocAiProperties;
+import tools.jackson.core.JacksonException;
 
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.definition.DefaultToolDefinition;
@@ -74,7 +76,7 @@ public class OpenApiToolCallback implements ToolCallback {
 	/**
 	 * The object mapper for JSON parsing.
 	 */
-	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+	private static final ObjectMapper OBJECT_MAPPER = new JsonMapper();
 
 	/**
 	 * The HTTP client for making requests.
@@ -453,7 +455,7 @@ public class OpenApiToolCallback implements ToolCallback {
 				.build());
 			return response;
 		}
-		catch (IOException | InterruptedException ex) {
+		catch ( JacksonException |IOException | InterruptedException ex) {
 			McpAuditLogger.log(McpAuditLogger.AuditRecord.builder()
 				.toolName(getToolDefinition().name())
 				.httpMethod(method.name())
@@ -522,7 +524,7 @@ public class OpenApiToolCallback implements ToolCallback {
 		if (operation.getParameters() != null) {
 			for (io.swagger.v3.oas.models.parameters.Parameter param : operation.getParameters()) {
 				if ("path".equals(param.getIn()) && input.has(param.getName())) {
-					resolved = resolved.replace("{" + param.getName() + "}", input.get(param.getName()).asText());
+					resolved = resolved.replace("{" + param.getName() + "}", input.get(param.getName()).asString());
 				}
 			}
 		}
@@ -530,7 +532,7 @@ public class OpenApiToolCallback implements ToolCallback {
 		StringBuilder sb = new StringBuilder();
 		while (matcher.find()) {
 			String varName = matcher.group(1);
-			String replacement = input.has(varName) ? input.get(varName).asText() : "";
+			String replacement = input.has(varName) ? input.get(varName).asString() : "";
 			matcher.appendReplacement(sb, Matcher.quoteReplacement(replacement));
 		}
 		matcher.appendTail(sb);
@@ -552,7 +554,7 @@ public class OpenApiToolCallback implements ToolCallback {
 					}
 					sb.append(URLEncoder.encode(param.getName(), StandardCharsets.UTF_8))
 						.append('=')
-						.append(URLEncoder.encode(input.get(param.getName()).asText(), StandardCharsets.UTF_8));
+						.append(URLEncoder.encode(input.get(param.getName()).asString(), StandardCharsets.UTF_8));
 				}
 			}
 		}
@@ -568,7 +570,7 @@ public class OpenApiToolCallback implements ToolCallback {
 		if (operation.getParameters() != null) {
 			for (io.swagger.v3.oas.models.parameters.Parameter param : operation.getParameters()) {
 				if ("header".equals(param.getIn()) && input.has(param.getName())) {
-					requestBuilder.header(param.getName(), input.get(param.getName()).asText());
+					requestBuilder.header(param.getName(), input.get(param.getName()).asString());
 				}
 			}
 		}
@@ -586,8 +588,8 @@ public class OpenApiToolCallback implements ToolCallback {
 		// If there's a request body expected but no "body" key, try using all
 		// non-parameter fields
 		if (operation.getRequestBody() != null) {
-			com.fasterxml.jackson.databind.node.ObjectNode bodyNode = OBJECT_MAPPER.createObjectNode();
-			Iterator<Map.Entry<String, JsonNode>> fields = input.fields();
+			tools.jackson.databind.node.ObjectNode bodyNode = OBJECT_MAPPER.createObjectNode();
+			Iterator<Map.Entry<String, JsonNode>> fields = input.properties().iterator();
 			while (fields.hasNext()) {
 				Map.Entry<String, JsonNode> field = fields.next();
 				if (!isParameterName(field.getKey())) {

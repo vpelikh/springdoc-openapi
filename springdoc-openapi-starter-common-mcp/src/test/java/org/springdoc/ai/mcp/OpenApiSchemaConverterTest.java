@@ -31,8 +31,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.media.Content;
@@ -58,7 +59,7 @@ class OpenApiSchemaConverterTest {
 	/**
 	 * The object mapper.
 	 */
-	private final ObjectMapper objectMapper = new ObjectMapper();
+	private final ObjectMapper objectMapper = new JsonMapper();
 
 	/**
 	 * Test that path and query parameters are correctly converted to JSON Schema.
@@ -78,16 +79,16 @@ class OpenApiSchemaConverterTest {
 		String schemaJson = OpenApiSchemaConverter.buildInputSchema("/users/{id}", operation, null);
 		JsonNode schema = objectMapper.readTree(schemaJson);
 
-		assertThat(schema.get("type").asText()).isEqualTo("object");
+		assertThat(schema.get("type").asString()).isEqualTo("object");
 		assertThat(schema.get("properties").has("id")).isTrue();
 		assertThat(schema.get("properties").has("filter")).isTrue();
-		assertThat(schema.get("properties").get("id").get("type").asText()).isEqualTo("string");
-		assertThat(schema.get("properties").get("filter").get("description").asText()).isEqualTo("Filter criteria");
+		assertThat(schema.get("properties").get("id").get("type").asString()).isEqualTo("string");
+		assertThat(schema.get("properties").get("filter").get("description").asString()).isEqualTo("Filter criteria");
 
 		// Check required
 		boolean idRequired = false;
 		for (JsonNode req : schema.get("required")) {
-			if ("id".equals(req.asText())) {
+			if ("id".equals(req.asString())) {
 				idRequired = true;
 			}
 		}
@@ -115,13 +116,13 @@ class OpenApiSchemaConverterTest {
 		JsonNode schema = objectMapper.readTree(schemaJson);
 
 		assertThat(schema.get("properties").has("body")).isTrue();
-		assertThat(schema.get("properties").get("body").get("type").asText()).isEqualTo("object");
+		assertThat(schema.get("properties").get("body").get("type").asString()).isEqualTo("object");
 		assertThat(schema.get("properties").get("body").has("properties")).isTrue();
 
 		// Check required contains "body"
 		boolean bodyRequired = false;
 		for (JsonNode req : schema.get("required")) {
-			if ("body".equals(req.asText())) {
+			if ("body".equals(req.asString())) {
 				bodyRequired = true;
 			}
 		}
@@ -160,7 +161,7 @@ class OpenApiSchemaConverterTest {
 		String schemaJson = OpenApiSchemaConverter.buildInputSchema("/test", operation, null);
 		JsonNode schema = objectMapper.readTree(schemaJson);
 
-		assertThat(schema.get("type").asText()).isEqualTo("object");
+		assertThat(schema.get("type").asString()).isEqualTo("object");
 		assertThat(schema.get("properties").isEmpty()).isTrue();
 		assertThat(schema.get("required").isEmpty()).isTrue();
 	}
@@ -177,13 +178,13 @@ class OpenApiSchemaConverterTest {
 		String schemaJson = OpenApiSchemaConverter.buildInputSchema("/api/v{api}/users", operation, null);
 		JsonNode schema = objectMapper.readTree(schemaJson);
 
-		assertThat(schema.get("type").asText()).isEqualTo("object");
+		assertThat(schema.get("type").asString()).isEqualTo("object");
 		assertThat(schema.get("properties").has("api")).isTrue();
-		assertThat(schema.get("properties").get("api").get("type").asText()).isEqualTo("string");
+		assertThat(schema.get("properties").get("api").get("type").asString()).isEqualTo("string");
 
 		boolean apiRequired = false;
 		for (JsonNode req : schema.get("required")) {
-			if ("api".equals(req.asText())) {
+			if ("api".equals(req.asString())) {
 				apiRequired = true;
 			}
 		}
@@ -207,12 +208,12 @@ class OpenApiSchemaConverterTest {
 		JsonNode schema = objectMapper.readTree(schemaJson);
 
 		JsonNode versionNode = schema.get("properties").get("version");
-		assertThat(versionNode.get("type").asText()).isEqualTo("string");
-		assertThat(versionNode.get("default").asText()).isEqualTo("1.0");
+		assertThat(versionNode.get("type").asString()).isEqualTo("string");
+		assertThat(versionNode.get("default").asString()).isEqualTo("1.0");
 		assertThat(versionNode.has("enum")).isTrue();
 		assertThat(versionNode.get("enum")).hasSize(2);
-		assertThat(versionNode.get("enum").get(0).asText()).isEqualTo("1.0");
-		assertThat(versionNode.get("enum").get(1).asText()).isEqualTo("v2");
+		assertThat(versionNode.get("enum").get(0).asString()).isEqualTo("1.0");
+		assertThat(versionNode.get("enum").get(1).asString()).isEqualTo("v2");
 	}
 
 	/**
@@ -232,7 +233,7 @@ class OpenApiSchemaConverterTest {
 		assertThat(schema.get("properties").has("id")).isTrue();
 		int idCount = 0;
 		for (JsonNode req : schema.get("required")) {
-			if ("id".equals(req.asText())) {
+			if ("id".equals(req.asString())) {
 				idCount++;
 			}
 		}
@@ -350,11 +351,11 @@ class OpenApiSchemaConverterTest {
 		JsonNode schema = objectMapper.readTree(schemaJson);
 
 		JsonNode addressNode = schema.get("properties").get("body").get("properties").get("address");
-		assertThat(addressNode.get("type").asText()).isEqualTo("object");
+		assertThat(addressNode.get("type").asString()).isEqualTo("object");
 		assertThat(addressNode.has("properties")).isTrue();
 		assertThat(addressNode.get("properties").has("street")).isTrue();
-		assertThat(addressNode.get("properties").get("street").get("type").asText()).isEqualTo("string");
-		assertThat(addressNode.get("properties").get("street").get("description").asText()).isEqualTo("Street name");
+		assertThat(addressNode.get("properties").get("street").get("type").asString()).isEqualTo("string");
+		assertThat(addressNode.get("properties").get("street").get("description").asString()).isEqualTo("Street name");
 		assertThat(addressNode.get("properties").has("zip")).isTrue();
 	}
 
@@ -388,7 +389,7 @@ class OpenApiSchemaConverterTest {
 		JsonNode schema = objectMapper.readTree(schemaJson);
 
 		JsonNode addressNode = schema.get("properties").get("body").get("properties").get("address");
-		assertThat(addressNode.get("type").asText()).isEqualTo("object");
+		assertThat(addressNode.get("type").asString()).isEqualTo("object");
 		assertThat(addressNode.has("properties")).isTrue();
 		assertThat(addressNode.get("properties").has("city")).isTrue();
 		assertThat(addressNode.get("properties").has("country")).isTrue();
@@ -423,7 +424,7 @@ class OpenApiSchemaConverterTest {
 		JsonNode schema = objectMapper.readTree(schemaJson);
 
 		JsonNode bodyItems = schema.get("properties").get("body").get("items");
-		assertThat(bodyItems.get("type").asText()).isEqualTo("object");
+		assertThat(bodyItems.get("type").asString()).isEqualTo("object");
 		assertThat(bodyItems.has("properties")).isTrue();
 		assertThat(bodyItems.get("properties").has("id")).isTrue();
 		assertThat(bodyItems.get("properties").has("label")).isTrue();
@@ -457,10 +458,10 @@ class OpenApiSchemaConverterTest {
 		boolean nameRequired = false;
 		boolean emailRequired = false;
 		for (JsonNode req : bodyNode.get("required")) {
-			if ("name".equals(req.asText())) {
+			if ("name".equals(req.asString())) {
 				nameRequired = true;
 			}
-			if ("email".equals(req.asText())) {
+			if ("email".equals(req.asString())) {
 				emailRequired = true;
 			}
 		}
@@ -505,7 +506,7 @@ class OpenApiSchemaConverterTest {
 		JsonNode schema = objectMapper.readTree(schemaJson);
 
 		JsonNode bodyNode = schema.get("properties").get("body");
-		assertThat(bodyNode.get("type").asText()).isEqualTo("object");
+		assertThat(bodyNode.get("type").asString()).isEqualTo("object");
 		assertThat(bodyNode.get("properties").has("id")).isTrue();
 		assertThat(bodyNode.get("properties").has("name")).isTrue();
 
@@ -513,10 +514,10 @@ class OpenApiSchemaConverterTest {
 		boolean idRequired = false;
 		boolean nameRequired = false;
 		for (JsonNode req : bodyNode.get("required")) {
-			if ("id".equals(req.asText())) {
+			if ("id".equals(req.asString())) {
 				idRequired = true;
 			}
-			if ("name".equals(req.asText())) {
+			if ("name".equals(req.asString())) {
 				nameRequired = true;
 			}
 		}
@@ -599,13 +600,13 @@ class OpenApiSchemaConverterTest {
 
 		// First level should have properties
 		JsonNode bodyNode = schema.get("properties").get("body");
-		assertThat(bodyNode.get("type").asText()).isEqualTo("object");
+		assertThat(bodyNode.get("type").asString()).isEqualTo("object");
 		assertThat(bodyNode.get("properties").has("name")).isTrue();
 		assertThat(bodyNode.get("properties").has("child")).isTrue();
 
 		// The child (circular) should just be { "type": "object" }
 		JsonNode childNode = bodyNode.get("properties").get("child");
-		assertThat(childNode.get("type").asText()).isEqualTo("object");
+		assertThat(childNode.get("type").asString()).isEqualTo("object");
 		assertThat(childNode.has("properties")).isFalse();
 	}
 
@@ -634,16 +635,16 @@ class OpenApiSchemaConverterTest {
 		JsonNode schema = objectMapper.readTree(schemaJson);
 
 		JsonNode ageNode = schema.get("properties").get("age");
-		assertThat(ageNode.get("type").asText()).isEqualTo("integer");
+		assertThat(ageNode.get("type").asString()).isEqualTo("integer");
 		assertThat(ageNode.get("minimum").intValue()).isEqualTo(0);
 		assertThat(ageNode.get("maximum").intValue()).isEqualTo(150);
 		assertThat(ageNode.get("exclusiveMinimum").asBoolean()).isTrue();
 
 		JsonNode nameNode = schema.get("properties").get("name");
-		assertThat(nameNode.get("type").asText()).isEqualTo("string");
+		assertThat(nameNode.get("type").asString()).isEqualTo("string");
 		assertThat(nameNode.get("minLength").intValue()).isEqualTo(1);
 		assertThat(nameNode.get("maxLength").intValue()).isEqualTo(100);
-		assertThat(nameNode.get("pattern").asText()).isEqualTo("^[a-zA-Z]+$");
+		assertThat(nameNode.get("pattern").asString()).isEqualTo("^[a-zA-Z]+$");
 	}
 
 	/**
@@ -663,8 +664,8 @@ class OpenApiSchemaConverterTest {
 
 		JsonNode nicknameNode = schema.get("properties").get("nickname");
 		assertThat(nicknameNode.get("type").isArray()).isTrue();
-		assertThat(nicknameNode.get("type").get(0).asText()).isEqualTo("string");
-		assertThat(nicknameNode.get("type").get(1).asText()).isEqualTo("null");
+		assertThat(nicknameNode.get("type").get(0).asString()).isEqualTo("string");
+		assertThat(nicknameNode.get("type").get(1).asString()).isEqualTo("null");
 	}
 
 	/**
@@ -731,10 +732,10 @@ class OpenApiSchemaConverterTest {
 		JsonNode schema = objectMapper.readTree(schemaJson);
 
 		JsonNode bodyNode = schema.get("properties").get("body");
-		assertThat(bodyNode.get("type").asText()).isEqualTo("array");
+		assertThat(bodyNode.get("type").asString()).isEqualTo("array");
 		assertThat(bodyNode.get("minItems").intValue()).isEqualTo(1);
 		assertThat(bodyNode.get("maxItems").intValue()).isEqualTo(10);
-		assertThat(bodyNode.get("items").get("type").asText()).isEqualTo("string");
+		assertThat(bodyNode.get("items").get("type").asString()).isEqualTo("string");
 	}
 
 }

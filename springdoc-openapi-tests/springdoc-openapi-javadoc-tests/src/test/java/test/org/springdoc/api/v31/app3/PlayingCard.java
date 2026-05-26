@@ -28,6 +28,7 @@ package test.org.springdoc.api.v31.app3;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
@@ -134,6 +135,7 @@ class PlayingCard {
 		 *
 		 * @param jsonValue the json value
 		 */
+		@JsonCreator
 		Suit(String jsonValue) {
 			this.jsonValue = jsonValue;
 		}
