@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
+import tools.jackson.databind.cfg.MapperConfig;
 import tools.jackson.databind.introspect.Annotated;
 import tools.jackson.databind.jsontype.NamedType;
 import tools.jackson.databind.module.SimpleModule;
@@ -51,7 +52,7 @@ public class SpringDocSealedClassModule extends SimpleModule {
 	private static class RespectSealedClassAnnotationIntrospector extends SwaggerAnnotationIntrospector {
 
 		@Override
-		public List<NamedType> findSubtypes(Annotated annotated) {
+		public List<NamedType> findSubtypes(MapperConfig<?> config, Annotated annotated) {
 			ArrayList<NamedType> subTypes = new ArrayList<>();
 
 			if (annotated.getAnnotated() instanceof Class<?> clazz

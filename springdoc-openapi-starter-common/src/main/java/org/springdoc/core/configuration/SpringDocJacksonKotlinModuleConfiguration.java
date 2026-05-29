@@ -26,6 +26,7 @@
 
 package org.springdoc.core.configuration;
 
+import tools.jackson.databind.ObjectMapper;
 import tools.jackson.module.kotlin.KotlinModule;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.providers.ObjectMapperProvider;
@@ -62,7 +63,10 @@ public class SpringDocJacksonKotlinModuleConfiguration {
 	@Primary
 	ObjectMapperProvider springdocKotlinObjectMapperProvider(SpringDocConfigProperties springDocConfigProperties) {
 		ObjectMapperProvider mapperProvider = new ObjectMapperProvider(springDocConfigProperties);
-		mapperProvider.jsonMapper().registerModule(new KotlinModule.Builder().build());
+		ObjectMapper objectMapper = mapperProvider.jsonMapper().rebuild()
+					.addModule(new KotlinModule.Builder().build())
+					.build();
+		mapperProvider.setJsonMapper(objectMapper);
 		return mapperProvider;
 	}
 }

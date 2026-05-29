@@ -115,6 +115,7 @@ import org.springdoc.core.utils.SpringDocUtils;
 import org.springdoc.core.versions.MediaTypeVersionStrategy;
 import org.springdoc.core.versions.SpringDocVersionStrategy;
 import tools.jackson.core.JacksonException;
+import tools.jackson.dataformat.yaml.YAMLMapper;
 import tools.jackson.dataformat.yaml.YAMLWriteFeature;
 
 import org.springframework.aop.support.AopUtils;
@@ -1537,9 +1538,11 @@ public abstract class AbstractOpenApiResource extends SpecFilter {
 		String result;
 		ObjectMapper objectMapper = springDocProviders.yamlMapper();
 		if (springDocConfigProperties.isWriterWithOrderByKeys())
-			ObjectMapperProvider.sortOutput(objectMapper, springDocConfigProperties);
-		YAMLFactory factory = (YAMLFactory) objectMapper.getFactory();
-		factory.configure(YAMLWriteFeature.USE_NATIVE_TYPE_ID, false);
+			objectMapper = ObjectMapperProvider.sortOutput(objectMapper, springDocConfigProperties);
+		YAMLMapper.Builder factory = ((YAMLMapper) objectMapper)
+				.rebuild()
+				.configure(YAMLWriteFeature.USE_NATIVE_TYPE_ID, false);
+		objectMapper = factory.build();
 		if (!springDocConfigProperties.isWriterWithDefaultPrettyPrinter())
 			result = objectMapper.writerFor(OpenAPI.class).writeValueAsString(openAPI);
 		else
@@ -1608,7 +1611,7 @@ public abstract class AbstractOpenApiResource extends SpecFilter {
 		String result;
 		ObjectMapper objectMapper = springDocProviders.jsonMapper();
 		if (springDocConfigProperties.isWriterWithOrderByKeys())
-			ObjectMapperProvider.sortOutput(objectMapper, springDocConfigProperties);
+			objectMapper = ObjectMapperProvider.sortOutput(objectMapper, springDocConfigProperties);
 		if (!springDocConfigProperties.isWriterWithDefaultPrettyPrinter())
 			result = objectMapper.writerFor(OpenAPI.class).writeValueAsString(openAPI);
 		else

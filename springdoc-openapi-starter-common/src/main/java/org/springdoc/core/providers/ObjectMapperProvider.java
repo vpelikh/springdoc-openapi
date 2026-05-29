@@ -42,6 +42,7 @@ import org.springdoc.core.mixins.SortedSchemaMixin;
 import org.springdoc.core.mixins.SortedSchemaMixin31;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.properties.SpringDocConfigProperties.ApiDocs.OpenApiVersion;
+import tools.jackson.databind.cfg.MapperBuilder;
 
 /**
  * The type Spring doc object mapper provider.
@@ -51,12 +52,12 @@ public class ObjectMapperProvider extends ObjectMapperFactory {
 	/**
 	 * The Json mapper.
 	 */
-	private final ObjectMapper jsonMapper;
+	private ObjectMapper jsonMapper;
 
 	/**
 	 * The Yaml mapper.
 	 */
-	private final ObjectMapper yamlMapper;
+	private ObjectMapper yamlMapper;
 
 	/**
 	 * The Spring doc config properties.
@@ -106,7 +107,7 @@ public class ObjectMapperProvider extends ObjectMapperFactory {
 			objectMapper = ObjectMapperFactory.createJson();
 
 		if (springDocConfigProperties.isWriterWithOrderByKeys())
-			sortOutput(objectMapper, springDocConfigProperties);
+			objectMapper = sortOutput(objectMapper, springDocConfigProperties);
 
 		return objectMapper;
 	}
@@ -117,16 +118,19 @@ public class ObjectMapperProvider extends ObjectMapperFactory {
 	 * @param objectMapper              the object mapper
 	 * @param springDocConfigProperties the spring doc config properties
 	 */
-	public static void sortOutput(ObjectMapper objectMapper, SpringDocConfigProperties springDocConfigProperties) {
-		objectMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+	public static ObjectMapper sortOutput(ObjectMapper objectMapper, SpringDocConfigProperties springDocConfigProperties) {
+		MapperBuilder<ObjectMapper, ?> mapperBuilder = objectMapper
+				.rebuild()
+				.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
 		if (OpenApiVersion.OPENAPI_3_1 == springDocConfigProperties.getApiDocs().getVersion()) {
-			objectMapper.addMixIn(OpenAPI.class, SortedOpenAPIMixin31.class);
-			objectMapper.addMixIn(Schema.class, SortedSchemaMixin31.class);
+			mapperBuilder.addMixIn(OpenAPI.class, SortedOpenAPIMixin31.class);
+			mapperBuilder.addMixIn(Schema.class, SortedSchemaMixin31.class);
 		}
 		else {
-			objectMapper.addMixIn(OpenAPI.class, SortedOpenAPIMixin.class);
-			objectMapper.addMixIn(Schema.class, SortedSchemaMixin.class);
+			mapperBuilder.addMixIn(OpenAPI.class, SortedOpenAPIMixin.class);
+			mapperBuilder.addMixIn(Schema.class, SortedSchemaMixin.class);
 		}
+		return mapperBuilder.build();
 	}
 
 	/**
@@ -138,6 +142,10 @@ public class ObjectMapperProvider extends ObjectMapperFactory {
 		return jsonMapper;
 	}
 
+	public void setJsonMapper(ObjectMapper jsonMapper) {
+		this.jsonMapper = jsonMapper;
+	}
+
 	/**
 	 * Yaml mapper object mapper.
 	 *
@@ -145,6 +153,10 @@ public class ObjectMapperProvider extends ObjectMapperFactory {
 	 */
 	public ObjectMapper yamlMapper() {
 		return yamlMapper;
+	}
+
+	public void setYamlMapper(ObjectMapper yamlMapper) {
+		this.yamlMapper = yamlMapper;
 	}
 
 	/**

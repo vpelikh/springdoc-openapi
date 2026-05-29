@@ -26,6 +26,7 @@
 
 package org.springdoc.core.configuration;
 
+import tools.jackson.databind.cfg.MapperConfig;
 import tools.jackson.databind.introspect.AnnotatedMember;
 import tools.jackson.databind.module.SimpleModule;
 import io.swagger.v3.core.jackson.SwaggerAnnotationIntrospector;
@@ -50,7 +51,7 @@ public class SpringDocRequiredModule extends SimpleModule {
 	private static class RespectSchemaRequiredAnnotationIntrospector extends SwaggerAnnotationIntrospector {
 
 		@Override
-		public Boolean hasRequiredMarker(AnnotatedMember annotatedMember) {
+		public Boolean hasRequiredMarker(MapperConfig<?> config, AnnotatedMember annotatedMember) {
 			Schema schemaAnnotation = annotatedMember.getAnnotation(Schema.class);
 			if (schemaAnnotation != null) {
 				Schema.RequiredMode requiredMode = schemaAnnotation.requiredMode();
@@ -61,7 +62,7 @@ public class SpringDocRequiredModule extends SimpleModule {
 					return false;
 				}
 			}
-			return super.hasRequiredMarker(annotatedMember);
+			return super.hasRequiredMarker(config, annotatedMember);
 		}
 	}
 }
