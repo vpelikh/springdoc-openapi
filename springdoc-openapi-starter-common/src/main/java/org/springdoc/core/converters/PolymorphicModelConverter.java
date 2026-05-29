@@ -268,16 +268,16 @@ public class PolymorphicModelConverter implements ModelConverter {
 	 */
 	private List<BeanPropertyBiDefinition> introspectBeanProperties(JavaType javaType) {
 		Map<String, BeanPropertyDefinition> forSerializationProps =
-				/* TODO serializationConfig() is not to be used by application code in Jackson 3 (see https://github.com/FasterXML/jackson-databind/blob/3.x/src/main/java/tools/jackson/databind/ObjectMapper.java#L417). Consider using builder configuration instead. */springDocObjectMapper.jsonMapper()
-						.serializationConfig()
-						.introspect(javaType)
+				springDocObjectMapper.jsonMapper()
+						._serializationContext()
+						.introspectBeanDescription(javaType)
 						.findProperties()
 						.stream()
 						.collect(toMap(BeanPropertyDefinition::getName, identity()));
 		Map<String, BeanPropertyDefinition> forDeserializationProps =
-				/* TODO deserializationConfig() is not to be used by application code in Jackson 3 (see https://github.com/FasterXML/jackson-databind/blob/3.x/src/main/java/tools/jackson/databind/ObjectMapper.java#L427). Consider using builder configuration instead. */springDocObjectMapper.jsonMapper()
-						.deserializationConfig()
-						.introspect(javaType)
+				springDocObjectMapper.jsonMapper()
+						._deserializationContext()
+						.introspectBeanDescription(javaType)
 						.findProperties()
 						.stream()
 						.collect(toMap(BeanPropertyDefinition::getName, identity()));

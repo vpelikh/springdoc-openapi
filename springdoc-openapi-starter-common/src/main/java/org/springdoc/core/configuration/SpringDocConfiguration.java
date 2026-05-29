@@ -36,6 +36,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Future;
 
+import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
 import com.querydsl.core.types.Predicate;
 import io.swagger.v3.core.converter.ModelConverter;
@@ -444,7 +445,11 @@ public class SpringDocConfiguration {
 			Optional<RepositoryRestResourceProvider> repositoryRestResourceProvider, Optional<RouterFunctionProvider> routerFunctionProvider,
 			Optional<SpringWebProvider> springWebProvider,
 			ObjectMapperProvider objectMapperProvider) {
-		objectMapperProvider.jsonMapper().registerModules(new SpringDocRequiredModule(), new SpringDocSealedClassModule());
+		ObjectMapper mapper = objectMapperProvider.jsonMapper()
+				.rebuild()
+				.addModules(new SpringDocRequiredModule(), new SpringDocSealedClassModule())
+				.build();
+		objectMapperProvider.setJsonMapper(mapper);
 		return new SpringDocProviders(actuatorProvider, springCloudFunctionProvider, springSecurityOAuth2Provider, repositoryRestResourceProvider, routerFunctionProvider, springWebProvider, objectMapperProvider);
 	}
 

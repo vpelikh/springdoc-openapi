@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotatedElementUtils;
+import tools.jackson.databind.util.NamingStrategyImpls;
 
 /**
  * The type Parameter object naming strategy customizer.
@@ -58,7 +59,7 @@ public class ParameterObjectNamingStrategyCustomizer implements DelegatingMethod
 					Field parameterNameField = FieldUtils.getDeclaredField(methodParameter.getClass(), "parameterName",
 							true);
 					parameterNameField.set(methodParameter,
-							PropertyNamingStrategies.UpperSnakeCaseStrategy.INSTANCE.translate(
+							NamingStrategyImpls.UPPER_SNAKE_CASE.translate(
 									methodParameter.getParameterName()));
 				}
 				catch (IllegalAccessException e) {
