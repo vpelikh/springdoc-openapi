@@ -45,7 +45,6 @@ public interface DelegatingMethodParameterCustomizer {
 	 * @param originalParameter the original parameter
 	 * @param methodParameters  the exploded parameters
 	 */
-	@Nullable
 	default void customizeList(MethodParameter originalParameter, List<MethodParameter> methodParameters) {
 		methodParameters.forEach(parameter -> customize(originalParameter, parameter));
 	}
