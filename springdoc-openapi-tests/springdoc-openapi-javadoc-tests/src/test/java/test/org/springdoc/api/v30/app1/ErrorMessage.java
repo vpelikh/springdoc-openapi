@@ -45,11 +45,11 @@ class ErrorMessage {
 	 * Instantiates a new Error message.
 	 *
 	 * @param id       the id
-	 * @param message2 the message 2
+	 * @param message  the message
 	 */
-	public ErrorMessage(String id, String message2) {
+	public ErrorMessage(String id, String message) {
 		this.id = id;
-		this.message = message2;
+		this.message = message;
 	}
 
 	/**

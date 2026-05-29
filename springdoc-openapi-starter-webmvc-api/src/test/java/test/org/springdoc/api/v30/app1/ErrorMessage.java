@@ -30,9 +30,9 @@ public class ErrorMessage {
 
 	private String message;
 
-	public ErrorMessage(String id, String message2) {
+	public ErrorMessage(String id, String message) {
 		this.id = id;
-		this.message = message2;
+		this.message = message;
 	}
 
 	public String getId() {
