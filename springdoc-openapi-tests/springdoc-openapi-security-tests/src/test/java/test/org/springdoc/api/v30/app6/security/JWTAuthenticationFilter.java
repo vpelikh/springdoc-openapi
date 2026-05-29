@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -39,7 +38,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import tools.jackson.core.JacksonException;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -82,7 +80,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 							credentials.getPassword(), new ArrayList<>()));
 
 		}
-		catch (JacksonException e) {
+		catch (IOException e) {
 			throw new InternalAuthenticationServiceException("Error processing credentials", e);
 		}
 	}
