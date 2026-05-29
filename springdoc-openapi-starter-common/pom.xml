@@ -21,7 +21,7 @@
 			<artifactId>spring-boot-validation</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.swagger.core.v3</groupId>
+			<groupId>io.github.vpelikh</groupId>
 			<artifactId>swagger-core-jakarta</artifactId>
 		</dependency>
 		<dependency>
