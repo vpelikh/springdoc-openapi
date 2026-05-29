@@ -144,6 +144,11 @@ Desktop.ini
 # ESLint
 ######################
 .eslintcache
+/default.profraw
+
+# AI
 /CLAUDE.md
 /.claude/
-/default.profraw
+/.sisyphus
+/.codegraph
+/.serena
