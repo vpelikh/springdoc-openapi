@@ -27,8 +27,6 @@
 package test.org.springdoc.api.v30.app6.security;
 
 import org.springdoc.core.properties.SpringDocConfigProperties;
-import test.org.springdoc.api.v31.app6.security.JWTAuthenticationFilter;
-import test.org.springdoc.api.v31.app6.security.JWTAuthorizationFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
