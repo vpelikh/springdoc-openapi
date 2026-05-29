@@ -1,9 +1,11 @@
 package test.org.springdoc.api.v31.app237.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record Example(
+		@JsonProperty("unwrapped")
 		@JsonUnwrapped
 		@Schema(requiredMode = Schema.RequiredMode.REQUIRED)
 		Wrapped unwrapped,
