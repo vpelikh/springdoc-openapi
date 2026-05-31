@@ -32,7 +32,7 @@ Add the dependency matching your web stack:
 
 ```xml
 <dependency>
-    <groupId>org.springdoc</groupId>
+    <groupId>io.github.vpelikh</groupId>
     <artifactId>springdoc-openapi-starter-webmvc-mcp</artifactId>
 </dependency>
 ```
@@ -41,7 +41,7 @@ Add the dependency matching your web stack:
 
 ```xml
 <dependency>
-    <groupId>org.springdoc</groupId>
+    <groupId>io.github.vpelikh</groupId>
     <artifactId>springdoc-openapi-starter-webflux-mcp</artifactId>
 </dependency>
 ```
