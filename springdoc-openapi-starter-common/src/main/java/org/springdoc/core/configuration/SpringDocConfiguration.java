@@ -445,11 +445,6 @@ public class SpringDocConfiguration {
 			Optional<RepositoryRestResourceProvider> repositoryRestResourceProvider, Optional<RouterFunctionProvider> routerFunctionProvider,
 			Optional<SpringWebProvider> springWebProvider,
 			ObjectMapperProvider objectMapperProvider) {
-		ObjectMapper mapper = objectMapperProvider.jsonMapper()
-				.rebuild()
-				.addModules(new SpringDocRequiredModule(), new SpringDocSealedClassModule())
-				.build();
-		objectMapperProvider.setJsonMapper(mapper);
 		return new SpringDocProviders(actuatorProvider, springCloudFunctionProvider, springSecurityOAuth2Provider, repositoryRestResourceProvider, routerFunctionProvider, springWebProvider, objectMapperProvider);
 	}
 
