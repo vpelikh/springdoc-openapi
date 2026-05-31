@@ -30,11 +30,11 @@ import io.swagger.v3.core.converter.ModelConverter
 import io.swagger.v3.core.converter.ModelConverterContext
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.media.Schema
+import org.springdoc.core.providers.ObjectMapperProvider
+import tools.jackson.databind.JavaType
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
-import org.springdoc.core.providers.ObjectMapperProvider
-import tools.jackson.databind.JavaType
 import kotlin.reflect.jvm.javaField
 
 /**
@@ -44,6 +44,8 @@ import kotlin.reflect.jvm.javaField
  * Jackson 3's KotlinModule does not override [tools.jackson.databind.introspect.AnnotationIntrospector.hasRequiredMarker],
  * so [io.swagger.v3.core.jackson.ModelResolver] cannot determine required status for Kotlin
  * properties through introspection alone. This ModelConverter post-processor fills that gap.
+ *
+ * Also renames inline value class properties from mangled JVM names back to Kotlin property names.
  *
  * @author springdoc team
  */
@@ -56,7 +58,9 @@ class KotlinRequiredPropertyCustomizer(
 		context: ModelConverterContext,
 		chain: Iterator<ModelConverter>
 	): Schema<*>? {
-		if (!chain.hasNext()) return null
+		if (!chain.hasNext()) {
+			return null
+		}
 		val resolvedSchema = chain.next().resolve(type, context, chain)
 
 		val javaType: JavaType =
@@ -97,6 +101,7 @@ class KotlinRequiredPropertyCustomizer(
 
 		val currentRequired: MutableSet<String> =
 			targetSchema.required?.toMutableSet() ?: mutableSetOf()
+		val renameMap = mutableMapOf<String, String>()
 		var changed = false
 
 		for (prop in kotlinClass.memberProperties) {
@@ -107,7 +112,11 @@ class KotlinRequiredPropertyCustomizer(
 			val schemaFieldName = if (fieldName in schemaProperties) {
 				fieldName
 			} else {
-				schemaProperties.firstOrNull { it.startsWith("$fieldName-") }
+				val mangled = schemaProperties.firstOrNull { it.startsWith("$fieldName-") }
+				if (mangled != null) {
+					renameMap[mangled] = fieldName
+					mangled
+				} else null
 			}
 			if (schemaFieldName == null) continue
 
@@ -132,6 +141,23 @@ class KotlinRequiredPropertyCustomizer(
 
 			currentRequired.add(schemaFieldName)
 			changed = true
+		}
+
+		// Rename inline value class properties from mangled JVM names back to Kotlin names
+		if (renameMap.isNotEmpty() && targetSchema.properties != null) {
+			val newProperties = LinkedHashMap<String, Schema<*>>()
+			for ((key, value) in targetSchema.properties!!) {
+				newProperties[renameMap[key] ?: key] = value
+			}
+			targetSchema.properties = newProperties
+			changed = true
+		}
+
+		// Apply renameMap to currentRequired so we write unmangled names to required[]
+		if (renameMap.isNotEmpty()) {
+			val renamed = currentRequired.map { renameMap[it] ?: it }.toMutableSet()
+			currentRequired.clear()
+			currentRequired.addAll(renamed)
 		}
 
 		if (changed) {
