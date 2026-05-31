@@ -29,6 +29,7 @@ package org.springdoc.core.configuration
 import org.springdoc.core.converters.KotlinInlineClassUnwrappingConverter
 import org.springdoc.core.customizers.KotlinDeprecatedPropertyCustomizer
 import org.springdoc.core.customizers.KotlinNullablePropertyCustomizer
+import org.springdoc.core.customizers.KotlinRequiredPropertyCustomizer
 import org.springdoc.core.providers.ObjectMapperProvider
 import org.springdoc.core.utils.Constants
 import org.springdoc.core.utils.SpringDocKotlinUtils
@@ -68,7 +69,12 @@ class SpringDocKotlinConfiguration() {
 			.addDeprecatedType(Deprecated::class.java)
 	}
 
-	
+	@Bean
+	@Lazy(false)
+	fun kotlinRequiredPropertyCustomizer(objectMapperProvider: ObjectMapperProvider): KotlinRequiredPropertyCustomizer {
+		return KotlinRequiredPropertyCustomizer(objectMapperProvider)
+	}
+
 	@ConditionalOnClass(name = ["kotlin.reflect.full.KClasses"])
 	class KotlinReflectDependingConfiguration {
 
