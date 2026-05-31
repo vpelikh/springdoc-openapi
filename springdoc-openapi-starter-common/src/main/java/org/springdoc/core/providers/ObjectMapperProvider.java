@@ -28,21 +28,22 @@ package org.springdoc.core.providers;
 
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.cfg.MapperBuilder;
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.core.util.Json31;
 import io.swagger.v3.core.util.ObjectMapperFactory;
+import io.swagger.v3.core.util.PrimitiveType;
 import io.swagger.v3.core.util.Yaml;
 import io.swagger.v3.core.util.Yaml31;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.core.util.PrimitiveType;
 import io.swagger.v3.oas.models.media.Schema;
+import org.springdoc.core.configuration.SpringDocSealedClassModule;
 import org.springdoc.core.mixins.SortedOpenAPIMixin;
 import org.springdoc.core.mixins.SortedOpenAPIMixin31;
 import org.springdoc.core.mixins.SortedSchemaMixin;
 import org.springdoc.core.mixins.SortedSchemaMixin31;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.properties.SpringDocConfigProperties.ApiDocs.OpenApiVersion;
-import tools.jackson.databind.cfg.MapperBuilder;
 
 /**
  * The type Spring doc object mapper provider.
@@ -72,9 +73,13 @@ public class ObjectMapperProvider extends ObjectMapperFactory {
 	public ObjectMapperProvider(SpringDocConfigProperties springDocConfigProperties) {
 		this.springDocConfigProperties = springDocConfigProperties;
 		OpenApiVersion openApiVersion = springDocConfigProperties.getApiDocs().getVersion();
+
+		ObjectMapper baseJsonMapper;
+		ObjectMapper baseYamlMapper;
+
 		if (openApiVersion == OpenApiVersion.OPENAPI_3_1) {
-			jsonMapper = Json31.mapper();
-			yamlMapper = Yaml31.mapper();
+			baseJsonMapper = Json31.mapper();
+			baseYamlMapper = Yaml31.mapper();
 			if (springDocConfigProperties.isUseArbitrarySchemas()) {
 				System.setProperty(Schema.USE_ARBITRARY_SCHEMA_PROPERTY, "true");
 			}
@@ -86,10 +91,18 @@ public class ObjectMapperProvider extends ObjectMapperFactory {
 			}
 		}
 		else {
-			jsonMapper = Json.mapper();
-			yamlMapper = Yaml.mapper();
+			baseJsonMapper = Json.mapper();
+			baseYamlMapper = Yaml.mapper();
 			PrimitiveType.explicitObjectType = null;
 		}
+
+		jsonMapper = baseJsonMapper.rebuild()
+				.addModule(new SpringDocSealedClassModule())
+				.build();
+
+		yamlMapper = baseYamlMapper.rebuild()
+				.addModule(new SpringDocSealedClassModule())
+				.build();
 	}
 
 	/**
