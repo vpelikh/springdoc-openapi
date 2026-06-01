@@ -58,7 +58,7 @@
 		<central-publishing-maven-plugin.version>0.7.0
 		</central-publishing-maven-plugin.version>
 		<flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-		<swagger-api.version>3.0.0-SNAPSHOT</swagger-api.version>
+		<swagger-core.version>3.0.0-RC1</swagger-core.version>
 		<swagger-ui.version>5.32.2</swagger-ui.version>
 		<gmavenplus-plugin.version>1.13.1</gmavenplus-plugin.version>
 		<jjwt.version>0.9.1</jjwt.version>
@@ -81,7 +81,7 @@
 			<dependency>
 				<groupId>io.github.vpelikh</groupId>
 				<artifactId>swagger-core-jakarta</artifactId>
-				<version>${swagger-api.version}</version>
+				<version>${swagger-core.version}</version>
 			</dependency>
 			<!-- swagger ui -->
 			<dependency>
