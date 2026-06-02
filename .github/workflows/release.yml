@@ -1,0 +1,108 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Type of release'
+        required: true
+        type: choice
+        options:
+          - milestone
+          - rc
+          - release
+        default: 'release'
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0                        # fetch all history and tags
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          java-version: 17
+          distribution: temurin
+          server-id: central
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.OSSRH_GPG_PRIVATE_KEY }}
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v5
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Compute release version
+        id: version
+        run: . ./CI/compute-release-version.sh ${{ github.event.inputs.release_type }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prepare release commit (detached)
+        run: . ./CI/prepare-release-commit.sh
+
+      - name: Build and test
+        run: mvn --no-transfer-progress -B install --file pom.xml
+
+      - name: Deploy to Maven Central
+        if: success()
+        run: mvn --no-transfer-progress -B -Pgpg deploy
+
+      - name: Tag and push release tag
+        if: success()
+        run: |
+          git tag "v${RELEASE_VERSION}"
+          git push origin "v${RELEASE_VERSION}"
+
+      - name: Publish GitHub release
+        if: success()
+        run: python CI/publishRelease.py "v${RELEASE_VERSION}"
+
+      - name: Generate Javadocs for springdoc-openapi-starter-common
+        if: success()
+        run: mvn -pl springdoc-openapi-starter-common javadoc:javadoc -DskipTests
+
+      - name: Prepare javadocs
+        if: success()
+        run: . ./CI/prepare-javadocs.sh
+
+      - name: Checkout gh-pages and publish javadocs
+        if: success()
+        uses: actions/checkout@v6
+        with:
+          ref: "gh-pages"
+          fetch-depth: 0
+
+      - name: Publish javadocs
+        if: success()
+        run: |
+          TMPDIR="$(dirname -- "${0}")"
+          . $TMPDIR/publish-javadocs.sh
+
+      - name: Checkout main (for wiki update)
+        if: success()
+        uses: actions/checkout@v6
+        with:
+          ref: "main"
+          fetch-depth: 0
+
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+      MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+      MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GPG_PRIVATE_KEY: ${{ secrets.OSSRH_GPG_PRIVATE_KEY }}
+      GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_PRIVATE_PASSPHRASE }}
