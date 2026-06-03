@@ -24,7 +24,9 @@ package org.springdoc.core.configuration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import tools.jackson.databind.cfg.MapperConfig;
@@ -53,8 +55,15 @@ public class SpringDocSealedClassModule extends SimpleModule {
 
 		@Override
 		public List<NamedType> findSubtypes(MapperConfig<?> config, Annotated annotated) {
-			ArrayList<NamedType> subTypes = new ArrayList<>();
+			// Check for @JsonSubTypes first (for non-sealed types like Animal interface)
+			JsonSubTypes jsonSubTypes = annotated.getAnnotation(JsonSubTypes.class);
+			if (jsonSubTypes != null && jsonSubTypes.value().length > 0) {
+                return Arrays.stream(jsonSubTypes.value())
+						.map(type -> new NamedType(type.value(), type.name()))
+						.collect(Collectors.toList());
+			}
 
+			// Then handle sealed classes as before
 			if (annotated.getAnnotated() instanceof Class<?> clazz
 					&& clazz.isSealed()
 					&& !clazz.getPackage().getName().startsWith("java")
@@ -65,19 +74,21 @@ public class SpringDocSealedClassModule extends SimpleModule {
 					return new ArrayList<>();
 				}
 
-				JsonSubTypes jsonSubTypes = clazz.getAnnotation(JsonSubTypes.class);
+				// Check for @JsonSubTypes on sealed classes too
+				jsonSubTypes = clazz.getAnnotation(JsonSubTypes.class);
 				if (jsonSubTypes != null && jsonSubTypes.value().length > 0) {
 					return new ArrayList<>();
 				}
 
-
 				Class<?>[] permittedSubClasses = clazz.getPermittedSubclasses();
 				if (permittedSubClasses.length > 0) {
-					Arrays.stream(permittedSubClasses).map(NamedType::new).forEach(subTypes::add);
+					return Arrays.stream(permittedSubClasses)
+							.map(NamedType::new)
+							.collect(Collectors.toList());
 				}
 			}
 
-			return subTypes;
+			return Collections.emptyList();
 		}
 	}
 }
