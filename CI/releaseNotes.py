@@ -1,0 +1,50 @@
+#!/usr/bin/python
+
+import sys
+import json
+from datetime import datetime
+import ghApiClient
+
+def allPulls(releaseDate):
+    result = ""
+    baseurl = "https://api.github.com/repos/vpelikh/springdoc-openapi/pulls/"
+    content = ghApiClient.readUrl('repos/vpelikh/springdoc-openapi/pulls?state=closed&base=main&per_page=100')
+    for l in content:
+        stripped = l["url"][len(baseurl):]
+        mergedAt = l["merged_at"]
+        if mergedAt is not None:
+            if datetime.strptime(mergedAt, '%Y-%m-%dT%H:%M:%SZ') > releaseDate:
+                if not l['title'].startswith("bump snap"):
+                    result += '\n'
+                    result += "* " + l['title'] + " (#" + stripped + ")"
+    return result
+
+def lastReleaseDate(tag):
+    content = ghApiClient.readUrl('repos/vpelikh/springdoc-openapi/releases/tags/' + tag)
+    publishedAt = content["published_at"]
+    return datetime.strptime(publishedAt, '%Y-%m-%dT%H:%M:%SZ')
+
+def addRelease(release_title, tag, content, prerelease):
+    payload = {
+        "tag_name": tag,
+        "name": release_title,
+        "body": content,
+        "draft": True,
+        "prerelease": prerelease,
+        "target_commitish": "main"
+    }
+    ghApiClient.postUrl('repos/vpelikh/springdoc-openapi/releases', json.dumps(payload))
+
+def main(last_release, release_title, tag, prerelease_str):
+    prerelease = prerelease_str.lower() == 'true'
+    if last_release == "0.0.0":
+        # No previous stable release found, include all merged PRs
+        from datetime import datetime
+        release_date = datetime(1970, 1, 1)
+    else:
+        release_date = lastReleaseDate('v' + last_release)
+    result = allPulls(release_date)
+    addRelease(release_title, tag, result, prerelease)
+
+if __name__ == "__main__":
+    main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
