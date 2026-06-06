@@ -77,7 +77,9 @@ public class SpringDocSealedClassModule extends SimpleModule {
 				// Check for @JsonSubTypes on sealed classes too
 				jsonSubTypes = clazz.getAnnotation(JsonSubTypes.class);
 				if (jsonSubTypes != null && jsonSubTypes.value().length > 0) {
-					return new ArrayList<>();
+					return Arrays.stream(jsonSubTypes.value())
+							.map(type -> new NamedType(type.value(), type.name()))
+							.collect(Collectors.toList());
 				}
 
 				Class<?>[] permittedSubClasses = clazz.getPermittedSubclasses();
