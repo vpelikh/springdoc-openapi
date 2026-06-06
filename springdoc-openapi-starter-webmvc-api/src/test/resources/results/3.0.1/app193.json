@@ -58,15 +58,6 @@
   },
   "components": {
     "schemas": {
-      "Book": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
-          }
-        },
-        "description": "Represents a Book."
-      },
       "Books": {
         "type": "array",
         "description": "Represents a list of Books.",

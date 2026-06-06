@@ -68,6 +68,15 @@
   },
   "components": {
     "schemas": {
+      "Book": {
+        "type": "object",
+        "description": "Represents a Book.",
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        }
+      },
       "Books": {
         "allOf": [
           {
