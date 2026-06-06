@@ -76,6 +76,22 @@
           }
         ]
       },
+      "Child3": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Parent"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "childProperty3": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
       "MyRequest": {
         "type": "object",
         "properties": {
@@ -97,6 +113,9 @@
           },
           {
             "$ref": "#/components/schemas/Child2"
+          },
+          {
+            "$ref": "#/components/schemas/Child3"
           }
         ]
       }

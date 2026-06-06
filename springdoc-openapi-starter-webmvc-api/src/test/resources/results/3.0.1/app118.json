@@ -21,17 +21,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/ConcreteParent"
-                  },
-                  {
-                    "$ref": "#/components/schemas/ChildOfConcrete1"
-                  },
-                  {
-                    "$ref": "#/components/schemas/ChildOfConcrete2"
-                  }
-                ]
+                "$ref": "#/components/schemas/ConcreteParent"
               }
             }
           },
@@ -61,14 +51,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/ChildOfAbstract1"
-                  },
-                  {
-                    "$ref": "#/components/schemas/ChildOfAbstract2"
-                  }
-                ]
+                "$ref": "#/components/schemas/AbstractParent"
               }
             }
           },
@@ -139,7 +122,15 @@
         },
         "discriminator": {
           "propertyName": "type"
-        }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ChildOfConcrete1"
+          },
+          {
+            "$ref": "#/components/schemas/ChildOfConcrete2"
+          }
+        ]
       },
       "AbstractParent": {
         "required": [
@@ -157,7 +148,15 @@
         },
         "discriminator": {
           "propertyName": "type"
-        }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ChildOfAbstract1"
+          },
+          {
+            "$ref": "#/components/schemas/ChildOfAbstract2"
+          }
+        ]
       },
       "ChildOfAbstract1": {
         "type": "object",
@@ -195,29 +194,12 @@
         "type": "object",
         "properties": {
           "abstractParent": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ChildOfAbstract1"
-              },
-              {
-                "$ref": "#/components/schemas/ChildOfAbstract2"
-              }
-            ]
+            "$ref": "#/components/schemas/AbstractParent"
           },
           "concreteParents": {
             "type": "array",
             "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/ConcreteParent"
-                },
-                {
-                  "$ref": "#/components/schemas/ChildOfConcrete1"
-                },
-                {
-                  "$ref": "#/components/schemas/ChildOfConcrete2"
-                }
-              ]
+              "$ref": "#/components/schemas/ConcreteParent"
             }
           }
         }

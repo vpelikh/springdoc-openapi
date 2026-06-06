@@ -77,17 +77,18 @@
         },
         "discriminator": {
           "propertyName": "@type"
-        }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/CommonImplementor"
+          }
+        ]
       },
       "SecondHierarchyUser": {
         "type": "object",
         "properties": {
           "secondHierarchy": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CommonImplementor"
-              }
-            ]
+            "$ref": "#/components/schemas/SecondHierarchy"
           }
         }
       },
@@ -103,17 +104,18 @@
         },
         "discriminator": {
           "propertyName": "@type"
-        }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/CommonImplementor"
+          }
+        ]
       },
       "FirstHierarchyUser": {
         "type": "object",
         "properties": {
           "firstHierarchy": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CommonImplementor"
-              }
-            ]
+            "$ref": "#/components/schemas/FirstHierarchy"
           }
         }
       }

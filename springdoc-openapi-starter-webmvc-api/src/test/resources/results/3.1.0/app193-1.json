@@ -100,10 +100,23 @@
         "description": "Represents a list of Books."
       },
       "Knowledge": {
-        "description": "Represents the knowledge."
+        "description": "Represents the knowledge.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Books"
+          }
+        ]
       },
       "Animal": {
-        "description": "Represents an Animal class."
+        "description": "Represents an Animal class.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Dog"
+          },
+          {
+            "$ref": "#/components/schemas/Cat"
+          }
+        ]
       },
       "Cat": {
         "allOf": [

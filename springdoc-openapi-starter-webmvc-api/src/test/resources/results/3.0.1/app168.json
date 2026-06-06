@@ -74,6 +74,38 @@
   },
   "components": {
     "schemas": {
+      "ChildOfConcrete1": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ConcreteParent"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "concreteChild1Param": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "ChildOfConcrete2": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ConcreteParent"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "concreteChild2Param": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
       "ConcreteParent": {
         "required": [
           "type"
@@ -90,7 +122,15 @@
         },
         "discriminator": {
           "propertyName": "type"
-        }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ChildOfConcrete1"
+          },
+          {
+            "$ref": "#/components/schemas/ChildOfConcrete2"
+          }
+        ]
       },
       "AbstractParent": {
         "required": [
@@ -108,7 +148,47 @@
         },
         "discriminator": {
           "propertyName": "type"
-        }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ChildOfAbstract1"
+          },
+          {
+            "$ref": "#/components/schemas/ChildOfAbstract2"
+          }
+        ]
+      },
+      "ChildOfAbstract1": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractParent"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "abstrachChild1Param": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "ChildOfAbstract2": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractParent"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "abstractChild2Param": {
+                "type": "string"
+              }
+            }
+          }
+        ]
       },
       "Response": {
         "type": "object",

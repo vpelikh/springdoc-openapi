@@ -21,23 +21,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Superclass"
-                  },
-                  {
-                    "$ref": "#/components/schemas/IntermediateClass"
-                  },
-                  {
-                    "$ref": "#/components/schemas/Image"
-                  },
-                  {
-                    "$ref": "#/components/schemas/Mail"
-                  },
-                  {
-                    "$ref": "#/components/schemas/Home"
-                  }
-                ]
+                "$ref": "#/components/schemas/Superclass"
               }
             }
           },
@@ -84,6 +68,14 @@
         "discriminator": {
           "propertyName": "@type"
         },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Image"
+          },
+          {
+            "$ref": "#/components/schemas/Mail"
+          }
+        ],
         "required": [
           "@type"
         ]
@@ -105,6 +97,11 @@
         "discriminator": {
           "propertyName": "@type"
         },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Home"
+          }
+        ],
         "required": [
           "@type"
         ]
@@ -113,6 +110,11 @@
         "discriminator": {
           "propertyName": "@type"
         },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IntermediateClass"
+          }
+        ],
         "properties": {
           "@type": {
             "type": "string"

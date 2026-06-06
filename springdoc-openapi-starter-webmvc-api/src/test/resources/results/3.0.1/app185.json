@@ -43,17 +43,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/Pet"
-                    },
-                    {
-                      "$ref": "#/components/schemas/Cat"
-                    },
-                    {
-                      "$ref": "#/components/schemas/Dog"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/Pet"
                 }
               }
             }
@@ -112,7 +102,15 @@
         "description": "This is a Pet",
         "discriminator": {
           "propertyName": "type"
-        }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Dog"
+          },
+          {
+            "$ref": "#/components/schemas/Cat"
+          }
+        ]
       }
     }
   }
