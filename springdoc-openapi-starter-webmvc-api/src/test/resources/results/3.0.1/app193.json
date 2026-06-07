@@ -25,11 +25,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/Books"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/Knowledge"
                 }
               }
             }
@@ -51,14 +47,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/Cat"
-                    },
-                    {
-                      "$ref": "#/components/schemas/Dog"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/Animal"
                 }
               }
             }
@@ -88,11 +77,24 @@
       },
       "Knowledge": {
         "type": "object",
-        "description": "Represents the knowledge."
+        "description": "Represents the knowledge.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Books"
+          }
+        ]
       },
       "Animal": {
         "type": "object",
-        "description": "Represents an Animal class."
+        "description": "Represents an Animal class.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Dog"
+          },
+          {
+            "$ref": "#/components/schemas/Cat"
+          }
+        ]
       },
       "Cat": {
         "type": "object",

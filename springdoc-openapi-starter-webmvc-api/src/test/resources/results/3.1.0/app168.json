@@ -74,11 +74,49 @@
   },
   "components": {
     "schemas": {
+      "ChildOfConcrete1": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ConcreteParent"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "concreteChild1Param": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "ChildOfConcrete2": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ConcreteParent"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "concreteChild2Param": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
       "ConcreteParent": {
-        "required": [
-          "type"
-        ],
         "type": "object",
+        "discriminator": {
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ChildOfConcrete1"
+          },
+          {
+            "$ref": "#/components/schemas/ChildOfConcrete2"
+          }
+        ],
         "properties": {
           "id": {
             "type": "integer",
@@ -88,15 +126,23 @@
             "type": "string"
           }
         },
-        "discriminator": {
-          "propertyName": "type"
-        }
+        "required": [
+          "type"
+        ]
       },
       "AbstractParent": {
-        "required": [
-          "type"
-        ],
         "type": "object",
+        "discriminator": {
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ChildOfAbstract1"
+          },
+          {
+            "$ref": "#/components/schemas/ChildOfAbstract2"
+          }
+        ],
         "properties": {
           "id": {
             "type": "integer",
@@ -106,9 +152,39 @@
             "type": "string"
           }
         },
-        "discriminator": {
-          "propertyName": "type"
-        }
+        "required": [
+          "type"
+        ]
+      },
+      "ChildOfAbstract1": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractParent"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "abstrachChild1Param": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "ChildOfAbstract2": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractParent"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "abstractChild2Param": {
+                "type": "string"
+              }
+            }
+          }
+        ]
       },
       "Response": {
         "type": "object",

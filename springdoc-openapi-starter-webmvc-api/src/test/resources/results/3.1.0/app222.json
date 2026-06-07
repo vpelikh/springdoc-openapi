@@ -68,6 +68,11 @@
         "discriminator": {
           "propertyName": "@type"
         },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/CommonImplementor"
+          }
+        ],
         "properties": {
           "@type": {
             "type": "string"
@@ -81,11 +86,7 @@
         "type": "object",
         "properties": {
           "secondHierarchy": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CommonImplementor"
-              }
-            ]
+            "$ref": "#/components/schemas/SecondHierarchy"
           }
         }
       },
@@ -93,6 +94,11 @@
         "discriminator": {
           "propertyName": "@type"
         },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/CommonImplementor"
+          }
+        ],
         "properties": {
           "@type": {
             "type": "string"
@@ -106,11 +112,7 @@
         "type": "object",
         "properties": {
           "firstHierarchy": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CommonImplementor"
-              }
-            ]
+            "$ref": "#/components/schemas/FirstHierarchy"
           }
         }
       }

@@ -21,14 +21,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/ParentType1"
-                  },
-                  {
-                    "$ref": "#/components/schemas/ParentType2"
-                  }
-                ]
+                "$ref": "#/components/schemas/AbstractParent"
               }
             }
           },
@@ -58,14 +51,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/ChildType1"
-                  },
-                  {
-                    "$ref": "#/components/schemas/ChildType2"
-                  }
-                ]
+                "$ref": "#/components/schemas/AbstractChild"
               }
             }
           },
@@ -93,6 +79,14 @@
         "discriminator": {
           "propertyName": "type"
         },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ChildType1"
+          },
+          {
+            "$ref": "#/components/schemas/ChildType2"
+          }
+        ],
         "properties": {
           "id": {
             "type": "integer",
@@ -111,6 +105,14 @@
         "discriminator": {
           "propertyName": "type"
         },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ParentType1"
+          },
+          {
+            "$ref": "#/components/schemas/ParentType2"
+          }
+        ],
         "properties": {
           "id": {
             "type": "integer",
@@ -166,14 +168,7 @@
                 "type": "string"
               },
               "abstractChild": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/ChildType1"
-                  },
-                  {
-                    "$ref": "#/components/schemas/ChildType2"
-                  }
-                ]
+                "$ref": "#/components/schemas/AbstractChild"
               }
             }
           }
@@ -198,24 +193,10 @@
         "type": "object",
         "properties": {
           "abstractParent": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ParentType1"
-              },
-              {
-                "$ref": "#/components/schemas/ParentType2"
-              }
-            ]
+            "$ref": "#/components/schemas/AbstractParent"
           },
           "abstractChild": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ChildType1"
-              },
-              {
-                "$ref": "#/components/schemas/ChildType2"
-              }
-            ]
+            "$ref": "#/components/schemas/AbstractChild"
           }
         }
       }
