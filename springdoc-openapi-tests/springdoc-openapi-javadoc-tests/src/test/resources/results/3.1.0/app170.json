@@ -42,7 +42,15 @@
   "components": {
     "schemas": {
       "Animal": {
-        "description": "Represents an Animal class."
+        "description": "Represents an Animal class.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Dog"
+          },
+          {
+            "$ref": "#/components/schemas/Cat"
+          }
+        ]
       },
       "Cat": {
         "allOf": [
@@ -61,6 +69,7 @@
         ]
       },
       "Dog": {
+        "description": "Represents a Dog class.",
         "allOf": [
           {
             "$ref": "#/components/schemas/Animal"
@@ -77,8 +86,7 @@
               }
             }
           }
-        ],
-        "description": "Represents a Dog class."
+        ]
       }
     }
   }
