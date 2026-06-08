@@ -10,12 +10,6 @@
       "description": "Generated server url"
     }
   ],
-  "tags": [
-    {
-      "name": "example-controller",
-      "description": "The Example Controller"
-    }
-  ],
   "paths": {
     "/": {
       "post": {
@@ -53,7 +47,15 @@
         "description": "The type Question.",
         "discriminator": {
           "propertyName": "type"
-        }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TestQuestion"
+          },
+          {
+            "$ref": "#/components/schemas/TextQuestion"
+          }
+        ]
       },
       "Test": {
         "type": "object",
@@ -61,14 +63,7 @@
           "questions": {
             "type": "array",
             "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TestQuestion"
-                },
-                {
-                  "$ref": "#/components/schemas/TextQuestion"
-                }
-              ]
+              "$ref": "#/components/schemas/Question"
             }
           }
         },
@@ -118,5 +113,11 @@
         ]
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "example-controller",
+      "description": "The Example Controller"
+    }
+  ]
 }
