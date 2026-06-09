@@ -1,6 +1,7 @@
 
 package test.org.springdoc.api.v31.app13;
 
+
 import org.junit.jupiter.api.Test;
 import org.springdoc.core.utils.Constants;
 import test.org.springdoc.api.v31.AbstractSpringDocTest;
@@ -99,8 +100,8 @@ public class SpringDocApp13Test extends AbstractSpringDocTest {
         mockMvc.perform(get(Constants.DEFAULT_API_DOCS_URL))
                 // Verify HTTP status is 200 OK
                 .andExpect(status().isOk())
-                // Verify that _links property exists in TestDto schema
-                // Path: $.components.schemas.TestDto.properties._links
+				// Verify that _links property exists in TestDto schema
+				// Path: $.components.schemas.TestDto.properties._links
                 .andExpect(jsonPath("$.components.schemas.TestDto.properties._links").exists())
                 .andReturn();
     }

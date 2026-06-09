@@ -274,16 +274,16 @@
               "$ref": "#/components/schemas/AbstractJsonSchemaPropertyObject"
             }
           },
-          "requiredProperties": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "definitions": {
             "type": "object",
             "additionalProperties": {
               "$ref": "#/components/schemas/Item"
+            }
+          },
+          "requiredProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           },
           "type": {
@@ -314,7 +314,7 @@
           }
         }
       },
-      "EntityModelProperty": {
+      "EntityModelChildProperty": {
         "type": "object",
         "properties": {
           "id": {
@@ -323,9 +323,6 @@
           },
           "name": {
             "type": "string"
-          },
-          "myChildPropertyName": {
-            "$ref": "#/components/schemas/ChildProperty"
           },
           "_links": {
             "$ref": "#/components/schemas/Links"
@@ -353,16 +350,16 @@
           }
         }
       },
-      "PagedModelEntityModelProperty": {
+      "PagedModelEntityModelChildProperty": {
         "type": "object",
         "properties": {
           "_embedded": {
             "type": "object",
             "properties": {
-              "properties": {
+              "childProperties": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/EntityModelProperty"
+                  "$ref": "#/components/schemas/EntityModelChildProperty"
                 }
               }
             }
@@ -375,7 +372,7 @@
           }
         }
       },
-      "EntityModelChildProperty": {
+      "EntityModelProperty": {
         "type": "object",
         "properties": {
           "id": {
@@ -385,21 +382,24 @@
           "name": {
             "type": "string"
           },
+          "myChildPropertyName": {
+            "$ref": "#/components/schemas/ChildProperty"
+          },
           "_links": {
             "$ref": "#/components/schemas/Links"
           }
         }
       },
-      "PagedModelEntityModelChildProperty": {
+      "PagedModelEntityModelProperty": {
         "type": "object",
         "properties": {
           "_embedded": {
             "type": "object",
             "properties": {
-              "childProperties": {
+              "properties": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/EntityModelChildProperty"
+                  "$ref": "#/components/schemas/EntityModelProperty"
                 }
               }
             }
