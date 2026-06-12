@@ -24,10 +24,8 @@
 		<module>springdoc-openapi-actuator-webmvc-tests</module>
 		<module>springdoc-openapi-kotlin-webflux-tests</module>
 		<module>springdoc-openapi-kotlin-webmvc-tests</module>
-		<!-- FIXME hateoas and data-rest tests is broken after jackson 3 update
 		<module>springdoc-openapi-hateoas-tests</module>
 		<module>springdoc-openapi-data-rest-tests</module>
-		-->
 	</modules>
 
 	<build>
