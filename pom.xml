@@ -126,12 +126,6 @@
 				<artifactId>scalar-core</artifactId>
 				<version>${scalar.version}</version>
 			</dependency>
-			<!-- MCP SDK -->
-			<dependency>
-				<groupId>io.modelcontextprotocol.sdk</groupId>
-				<artifactId>mcp-core</artifactId>
-				<version>${mcp-sdk.version}</version>
-			</dependency>
 			<!-- Spring AI -->
 			<dependency>
 				<groupId>org.springframework.ai</groupId>
