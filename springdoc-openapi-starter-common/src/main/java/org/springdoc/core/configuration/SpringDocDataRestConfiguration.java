@@ -260,13 +260,14 @@ public class SpringDocDataRestConfiguration {
 		 *
 		 * @param linkRelationProvider        the link relation provider
 		 * @param repositoryRestConfiguration the repository rest configuration
+		 * @param objectMapperProvider        the object mapper provider
 		 * @return the spring doc data rest utils
 		 */
 		@Bean
 		@ConditionalOnMissingBean
 		@Lazy(false)
-		SpringDocDataRestUtils springDocDataRestUtils(LinkRelationProvider linkRelationProvider, RepositoryRestConfiguration repositoryRestConfiguration) {
-			return new SpringDocDataRestUtils(linkRelationProvider, repositoryRestConfiguration);
+		SpringDocDataRestUtils springDocDataRestUtils(LinkRelationProvider linkRelationProvider, RepositoryRestConfiguration repositoryRestConfiguration, ObjectMapperProvider objectMapperProvider) {
+			return new SpringDocDataRestUtils(linkRelationProvider, repositoryRestConfiguration, objectMapperProvider);
 		}
 	}
 

@@ -30,17 +30,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/ConcreteParent"
-                  },
-                  {
-                    "$ref": "#/components/schemas/ChildOfConcrete1"
-                  },
-                  {
-                    "$ref": "#/components/schemas/ChildOfConcrete2"
-                  }
-                ]
+                "$ref": "#/components/schemas/ConcreteParent"
               }
             }
           },
@@ -73,14 +63,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/ChildOfAbstract1"
-                  },
-                  {
-                    "$ref": "#/components/schemas/ChildOfAbstract2"
-                  }
-                ]
+                "$ref": "#/components/schemas/AbstractParent"
               }
             }
           },
@@ -153,6 +136,14 @@
         "discriminator": {
           "propertyName": "type"
         },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ChildOfConcrete1"
+          },
+          {
+            "$ref": "#/components/schemas/ChildOfConcrete2"
+          }
+        ],
         "properties": {
           "id": {
             "type": "integer",
@@ -173,6 +164,14 @@
         "discriminator": {
           "propertyName": "type"
         },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ChildOfAbstract1"
+          },
+          {
+            "$ref": "#/components/schemas/ChildOfAbstract2"
+          }
+        ],
         "properties": {
           "id": {
             "type": "integer",
@@ -236,31 +235,14 @@
         "description": "The type Response.",
         "properties": {
           "abstractParent": {
-            "description": "The Abstract parent.",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ChildOfAbstract1"
-              },
-              {
-                "$ref": "#/components/schemas/ChildOfAbstract2"
-              }
-            ]
+            "$ref": "#/components/schemas/AbstractParent",
+            "description": "The Abstract parent."
           },
           "concreteParents": {
             "type": "array",
             "description": "The Concrete parents.",
             "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/ConcreteParent"
-                },
-                {
-                  "$ref": "#/components/schemas/ChildOfConcrete1"
-                },
-                {
-                  "$ref": "#/components/schemas/ChildOfConcrete2"
-                }
-              ]
+              "$ref": "#/components/schemas/ConcreteParent"
             }
           }
         }

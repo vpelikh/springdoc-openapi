@@ -26,18 +26,9 @@
 
 package test.org.springdoc.api.v30.app301;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import tools.jackson.databind.introspect.SimpleMixInResolver;
-import tools.jackson.databind.type.ClassKey;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.springdoc.core.providers.ObjectMapperProvider;
 import test.org.springdoc.api.v30.AbstractSpringDocTest;
+
+import org.springdoc.core.providers.ObjectMapperProvider;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -46,33 +37,10 @@ import org.springframework.test.context.TestPropertySource;
 @TestPropertySource(properties = "springdoc.enable-data-rest=false")
 public class SpringDocApp301Test extends AbstractSpringDocTest {
 
-	private final Map<ClassKey, Class<?>> springMixins = new HashMap<>();
-
 	@Autowired
 	ObjectMapperProvider objectMapperProvider;
 
-	@BeforeEach
-	void init() throws IllegalAccessException {
-		SimpleMixInResolver _mixIns = (SimpleMixInResolver) FieldUtils.readDeclaredField(objectMapperProvider.jsonMapper(), "_mixIns", true);
-		Map<ClassKey, Class<?>> _localMixIns = (Map<ClassKey, Class<?>>) FieldUtils.readDeclaredField(_mixIns, "_localMixIns", true);
-		Iterator<Entry<ClassKey, Class<?>>> it = _localMixIns.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<ClassKey, Class<?>> entry = it.next();
-			if (entry.getKey().toString().startsWith("org.springframework")) {
-				springMixins.put(entry.getKey(), entry.getValue());
-				it.remove();
-			}
-		}
-
-	}
-
-	@AfterEach
-	void clean() throws IllegalAccessException {
-		SimpleMixInResolver _mixIns = (SimpleMixInResolver) FieldUtils.readDeclaredField(objectMapperProvider.jsonMapper(), "_mixIns", true);
-		Map<ClassKey, Class<?>> _localMixIns = (Map<ClassKey, Class<?>>) FieldUtils.readDeclaredField(_mixIns, "_localMixIns", true);
-		_localMixIns.putAll(springMixins);
-	}
-
 	@SpringBootApplication
 	static class SpringDocTestApp {}
+
 }

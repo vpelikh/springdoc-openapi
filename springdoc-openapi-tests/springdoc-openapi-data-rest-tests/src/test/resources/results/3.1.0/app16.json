@@ -991,16 +991,16 @@
               "$ref": "#/components/schemas/AbstractJsonSchemaPropertyObject"
             }
           },
-          "requiredProperties": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "definitions": {
             "type": "object",
             "additionalProperties": {
               "$ref": "#/components/schemas/Item"
+            }
+          },
+          "requiredProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           },
           "type": {
@@ -1159,7 +1159,6 @@
         }
       },
       "AccountRequestBody": {
-        "type": "object",
         "properties": {
           "id": {
             "type": "integer",
@@ -1175,7 +1174,6 @@
         }
       },
       "CustomerRequestBody": {
-        "type": "object",
         "properties": {
           "id": {
             "type": "integer",

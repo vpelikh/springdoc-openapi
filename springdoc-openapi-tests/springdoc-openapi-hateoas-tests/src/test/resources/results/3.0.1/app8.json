@@ -146,12 +146,6 @@
       "EntityModelEmployee": {
         "type": "object",
         "properties": {
-          "links": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Link"
-            }
-          },
           "id": {
             "type": "integer",
             "format": "int64"
@@ -164,22 +158,22 @@
           },
           "role": {
             "type": "string"
+          },
+          "_links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Link"
+            }
           }
         }
       },
       "Link": {
         "type": "object",
         "properties": {
-          "rel": {
-            "type": "string"
-          },
           "href": {
             "type": "string"
           },
           "hreflang": {
-            "type": "string"
-          },
-          "media": {
             "type": "string"
           },
           "title": {
@@ -196,22 +190,25 @@
           },
           "name": {
             "type": "string"
+          },
+          "templated": {
+            "type": "boolean"
           }
         }
       },
       "CollectionModelEntityModelEmployee": {
         "type": "object",
         "properties": {
-          "links": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Link"
-            }
-          },
-          "content": {
+          "_embedded": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/EntityModelEmployee"
+            }
+          },
+          "_links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Link"
             }
           }
         }

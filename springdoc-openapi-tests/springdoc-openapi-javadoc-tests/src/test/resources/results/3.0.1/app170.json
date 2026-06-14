@@ -25,14 +25,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/Cat"
-                    },
-                    {
-                      "$ref": "#/components/schemas/Dog"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/Animal"
                 }
               }
             }
@@ -45,7 +38,15 @@
     "schemas": {
       "Animal": {
         "type": "object",
-        "description": "Represents an Animal class."
+        "description": "Represents an Animal class.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Dog"
+          },
+          {
+            "$ref": "#/components/schemas/Cat"
+          }
+        ]
       },
       "Cat": {
         "type": "object",
