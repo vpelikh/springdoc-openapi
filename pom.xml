@@ -67,7 +67,7 @@
 		</spring-security-oauth2-authorization-server.version>
 		<scalar.version>0.5.55</scalar.version>
 		<spring-ai.version>1.1.8</spring-ai.version>
-		<mcp-sdk.version>0.18.2</mcp-sdk.version>
+		<mcp-sdk.version>0.18.3</mcp-sdk.version>
 		<skipPublishing>false</skipPublishing>
 		<skip.npm>true</skip.npm>
 		<frontend-maven-plugin.version>1.15.4</frontend-maven-plugin.version>
