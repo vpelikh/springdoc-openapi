@@ -29,13 +29,20 @@ package org.springdoc.core.converters;
 import java.util.List;
 import java.util.Optional;
 
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.cfg.MapperBuilder;
 import io.swagger.v3.core.converter.ModelConverter;
 import io.swagger.v3.core.converter.ModelConverters;
+import io.swagger.v3.core.jackson.ModelResolver;
+import io.swagger.v3.core.util.Json;
+import io.swagger.v3.core.util.Json31;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springdoc.core.utils.SpringDocHalJacksonModuleUtils;
 import org.springdoc.core.properties.SpringDocConfigProperties;
-
+import org.springdoc.core.providers.HateoasHalProvider;
+import org.springdoc.core.configuration.SpringDocSealedClassModule;
 /**
  * Wrapper for model converters to only register converters once
  *
@@ -58,14 +65,40 @@ public class ModelConverterRegistrar {
 	 *
 	 * @param modelConverters           spring registered model converter beans which have to be registered in {@link ModelConverters} instance
 	 * @param springDocConfigProperties the spring doc config properties
+	 * @param halProvider               the hal provider (nullable, absent when HAL is not on the classpath)
 	 */
-	public ModelConverterRegistrar(List<ModelConverter> modelConverters, SpringDocConfigProperties springDocConfigProperties) {
+	public ModelConverterRegistrar(List<ModelConverter> modelConverters, SpringDocConfigProperties springDocConfigProperties,
+	                               HateoasHalProvider halProvider) {
 		modelConvertersInstance = ModelConverters.getInstance(springDocConfigProperties.isOpenapi31());
+
+		replaceDefaultModelResolver(springDocConfigProperties.isOpenapi31(), halProvider == null || halProvider.isHalEnabled());
+
 		for (ModelConverter modelConverter : modelConverters) {
 			Optional<ModelConverter> registeredConverterOptional = getRegisteredConverterSameAs(modelConverter);
 			registeredConverterOptional.ifPresent(modelConvertersInstance::removeConverter);
 			modelConvertersInstance.addConverter(modelConverter);
 		}
+	}
+
+	private void replaceDefaultModelResolver(boolean openapi31, boolean configureHal) {
+		List<ModelConverter> existingConverters = modelConvertersInstance.getConverters();
+		for (ModelConverter converter : existingConverters) {
+			if (converter instanceof ModelResolver) {
+				modelConvertersInstance.removeConverter(converter);
+			}
+		}
+		ObjectMapper baseMapper = openapi31 ? Json31.mapper() : Json.mapper();
+		MapperBuilder<ObjectMapper, ?> builder = baseMapper.rebuild()
+			.addModule(new SpringDocSealedClassModule());
+		if (configureHal) {
+			SpringDocHalJacksonModuleUtils.configureHalOnBuilder(builder);
+		}
+		ObjectMapper modelResolverMapper = builder.build();
+		ModelResolver modelResolver = new ModelResolver(modelResolverMapper);
+		if (openapi31) {
+			modelResolver = modelResolver.openapi31(true);
+		}
+		modelConvertersInstance.addConverter(modelResolver);
 	}
 
 	/**

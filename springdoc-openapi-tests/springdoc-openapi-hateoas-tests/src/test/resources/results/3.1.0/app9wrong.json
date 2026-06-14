@@ -109,6 +109,12 @@
             "type": "boolean"
           }
         }
+      },
+      "Links": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/Link"
+        }
       }
     },
     "securitySchemes": {

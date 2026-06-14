@@ -1164,16 +1164,16 @@
               "$ref": "#/components/schemas/AbstractJsonSchemaPropertyObject"
             }
           },
-          "requiredProperties": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "definitions": {
             "type": "object",
             "additionalProperties": {
               "$ref": "#/components/schemas/Item"
+            }
+          },
+          "requiredProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           },
           "type": {
@@ -1229,6 +1229,41 @@
           }
         }
       },
+      "EntityModelAccount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "_links": {
+            "$ref": "#/components/schemas/Links"
+          }
+        }
+      },
+      "CollectionModelEntityModelAccount": {
+        "type": "object",
+        "properties": {
+          "_embedded": {
+            "type": "object",
+            "properties": {
+              "accounts": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/EntityModelAccount"
+                }
+              }
+            }
+          },
+          "_links": {
+            "$ref": "#/components/schemas/Links"
+          }
+        }
+      },
       "EntityModelCustomer": {
         "type": "object",
         "properties": {
@@ -1241,6 +1276,23 @@
           },
           "lastname": {
             "type": "string"
+          },
+          "_links": {
+            "$ref": "#/components/schemas/Links"
+          }
+        }
+      },
+      "CollectionModelObject": {
+        "type": "object",
+        "properties": {
+          "_embedded": {
+            "type": "object",
+            "properties": {
+              "objects": {
+                "type": "array",
+                "items": {}
+              }
+            }
           },
           "_links": {
             "$ref": "#/components/schemas/Links"
@@ -1277,23 +1329,6 @@
                 "items": {
                   "$ref": "#/components/schemas/AccountResponse"
                 }
-              }
-            }
-          },
-          "_links": {
-            "$ref": "#/components/schemas/Links"
-          }
-        }
-      },
-      "CollectionModelObject": {
-        "type": "object",
-        "properties": {
-          "_embedded": {
-            "type": "object",
-            "properties": {
-              "objects": {
-                "type": "array",
-                "items": {}
               }
             }
           },
@@ -1345,43 +1380,7 @@
           }
         }
       },
-      "EntityModelAccount": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "expiryDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_links": {
-            "$ref": "#/components/schemas/Links"
-          }
-        }
-      },
-      "CollectionModelEntityModelAccount": {
-        "type": "object",
-        "properties": {
-          "_embedded": {
-            "type": "object",
-            "properties": {
-              "accounts": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/EntityModelAccount"
-                }
-              }
-            }
-          },
-          "_links": {
-            "$ref": "#/components/schemas/Links"
-          }
-        }
-      },
       "AccountRequestBody": {
-        "type": "object",
         "properties": {
           "id": {
             "type": "integer",
@@ -1397,7 +1396,6 @@
         }
       },
       "CustomerRequestBody": {
-        "type": "object",
         "properties": {
           "id": {
             "type": "integer",
@@ -1418,7 +1416,6 @@
         }
       },
       "AccountResponse": {
-        "type": "object",
         "properties": {
           "id": {
             "type": "integer",

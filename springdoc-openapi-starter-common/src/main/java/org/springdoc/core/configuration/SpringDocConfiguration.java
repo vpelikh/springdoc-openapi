@@ -36,7 +36,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
 import com.querydsl.core.types.Predicate;
 import io.swagger.v3.core.converter.ModelConverter;
@@ -86,6 +85,7 @@ import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.providers.ActuatorProvider;
 import org.springdoc.core.providers.CloudFunctionProvider;
 import org.springdoc.core.providers.JavadocProvider;
+import org.springdoc.core.providers.HateoasHalProvider;
 import org.springdoc.core.providers.ObjectMapperProvider;
 import org.springdoc.core.providers.RepositoryRestConfigurationProvider;
 import org.springdoc.core.providers.RepositoryRestResourceProvider;
@@ -323,12 +323,13 @@ public class SpringDocConfiguration {
 	 *
 	 * @param modelConverters           the model converters
 	 * @param springDocConfigProperties the spring doc config properties
+	 * @param halProvider                the hal provider
 	 * @return the model converter registrar
 	 */
 	@Bean
 	@Lazy(false)
-	ModelConverterRegistrar modelConverterRegistrar(Optional<List<ModelConverter>> modelConverters, SpringDocConfigProperties springDocConfigProperties) {
-		return new ModelConverterRegistrar(modelConverters.orElse(Collections.emptyList()), springDocConfigProperties);
+	ModelConverterRegistrar modelConverterRegistrar(Optional<List<ModelConverter>> modelConverters, SpringDocConfigProperties springDocConfigProperties, Optional<HateoasHalProvider> halProvider) {
+		return new ModelConverterRegistrar(modelConverters.orElse(Collections.emptyList()), springDocConfigProperties, halProvider.orElse(null));
 	}
 
 	/**
