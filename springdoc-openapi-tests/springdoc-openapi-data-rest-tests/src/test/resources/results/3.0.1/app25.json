@@ -1300,17 +1300,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/PetRequestBody"
-                  },
-                  {
-                    "$ref": "#/components/schemas/CatRequestBody"
-                  },
-                  {
-                    "$ref": "#/components/schemas/DogRequestBody"
-                  }
-                ]
+                "$ref": "#/components/schemas/PetRequestBody"
               }
             }
           },
@@ -1383,17 +1373,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/PetRequestBody"
-                  },
-                  {
-                    "$ref": "#/components/schemas/CatRequestBody"
-                  },
-                  {
-                    "$ref": "#/components/schemas/DogRequestBody"
-                  }
-                ]
+                "$ref": "#/components/schemas/PetRequestBody"
               }
             }
           },
@@ -1470,17 +1450,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/PetRequestBody"
-                  },
-                  {
-                    "$ref": "#/components/schemas/CatRequestBody"
-                  },
-                  {
-                    "$ref": "#/components/schemas/DogRequestBody"
-                  }
-                ]
+                "$ref": "#/components/schemas/PetRequestBody"
               }
             }
           },
@@ -1945,16 +1915,16 @@
               "$ref": "#/components/schemas/AbstractJsonSchemaPropertyObject"
             }
           },
-          "requiredProperties": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "definitions": {
             "type": "object",
             "additionalProperties": {
               "$ref": "#/components/schemas/Item"
+            }
+          },
+          "requiredProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           },
           "type": {
@@ -1993,6 +1963,48 @@
           },
           "country": {
             "type": "string"
+          }
+        }
+      },
+      "EntityModelClinic": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "addresses": {
+            "maxItems": 2147483647,
+            "minItems": 1,
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Address"
+            }
+          },
+          "_links": {
+            "$ref": "#/components/schemas/Links"
+          }
+        }
+      },
+      "CollectionModelEntityModelClinic": {
+        "type": "object",
+        "properties": {
+          "_embedded": {
+            "type": "object",
+            "properties": {
+              "clinics": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/EntityModelClinic"
+                }
+              }
+            }
+          },
+          "_links": {
+            "$ref": "#/components/schemas/Links"
           }
         }
       },
@@ -2069,17 +2081,7 @@
               "pets": {
                 "type": "array",
                 "items": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/PetResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/CatResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/DogResponse"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/PetResponse"
                 }
               }
             }
@@ -2282,48 +2284,6 @@
           }
         }
       },
-      "EntityModelClinic": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "addresses": {
-            "maxItems": 2147483647,
-            "minItems": 1,
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Address"
-            }
-          },
-          "_links": {
-            "$ref": "#/components/schemas/Links"
-          }
-        }
-      },
-      "CollectionModelEntityModelClinic": {
-        "type": "object",
-        "properties": {
-          "_embedded": {
-            "type": "object",
-            "properties": {
-              "clinics": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/EntityModelClinic"
-                }
-              }
-            }
-          },
-          "_links": {
-            "$ref": "#/components/schemas/Links"
-          }
-        }
-      },
       "ClinicRequestBody": {
         "required": [
           "name"
@@ -2355,10 +2315,6 @@
         ],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
           "firstname": {
             "type": "string"
           },
@@ -2448,6 +2404,10 @@
             "items": {
               "type": "string"
             }
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
@@ -2580,7 +2540,15 @@
         },
         "discriminator": {
           "propertyName": "_type"
-        }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/DogRequestBody"
+          },
+          {
+            "$ref": "#/components/schemas/CatRequestBody"
+          }
+        ]
       },
       "CatResponse": {
         "required": [
@@ -2656,7 +2624,15 @@
         },
         "discriminator": {
           "propertyName": "_type"
-        }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/DogResponse"
+          },
+          {
+            "$ref": "#/components/schemas/CatResponse"
+          }
+        ]
       },
       "Link": {
         "type": "object",

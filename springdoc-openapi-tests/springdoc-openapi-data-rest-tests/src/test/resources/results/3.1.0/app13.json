@@ -24,9 +24,9 @@
             "description": "Zero-based page index (0..N)",
             "required": false,
             "schema": {
-              "minimum": 0,
               "type": "integer",
-              "default": 0
+              "default": 0,
+              "minimum": 0
             }
           },
           {
@@ -35,9 +35,9 @@
             "description": "The size of the page to be returned",
             "required": false,
             "schema": {
-              "minimum": 1,
               "type": "integer",
-              "default": 10
+              "default": 10,
+              "minimum": 1
             }
           },
           {
@@ -47,14 +47,14 @@
             "required": false,
             "schema": {
               "type": "array",
-              "items": {
-                "type": "string"
-              },
               "default": [
                 "some,desc",
                 "other,asc",
                 "another.that,desc"
-              ]
+              ],
+              "items": {
+                "type": "string"
+              }
             }
           }
         ],
@@ -78,9 +78,9 @@
             "description": "Zero-based page index (0..N)",
             "required": false,
             "schema": {
-              "minimum": 0,
               "type": "integer",
-              "default": 0
+              "default": 0,
+              "minimum": 0
             }
           },
           {
@@ -89,9 +89,9 @@
             "description": "The size of the page to be returned",
             "required": false,
             "schema": {
-              "minimum": 1,
               "type": "integer",
-              "default": 100
+              "default": 100,
+              "minimum": 1
             }
           },
           {
@@ -134,9 +134,9 @@
             "description": "Zero-based page index (0..N)",
             "required": false,
             "schema": {
-              "minimum": 0,
               "type": "integer",
-              "default": 0
+              "default": 0,
+              "minimum": 0
             }
           },
           {
@@ -145,9 +145,9 @@
             "description": "The size of the page to be returned",
             "required": false,
             "schema": {
-              "minimum": 1,
               "type": "integer",
-              "default": 100
+              "default": 100,
+              "minimum": 1
             }
           },
           {
@@ -190,9 +190,9 @@
             "description": "Zero-based page index (0..N)",
             "required": false,
             "schema": {
-              "minimum": 0,
               "type": "integer",
-              "default": 0
+              "default": 0,
+              "minimum": 0
             }
           },
           {
@@ -201,9 +201,9 @@
             "description": "The size of the page to be returned",
             "required": false,
             "schema": {
-              "minimum": 1,
               "type": "integer",
-              "default": 100
+              "default": 100,
+              "minimum": 1
             }
           },
           {
@@ -213,12 +213,12 @@
             "required": false,
             "schema": {
               "type": "array",
-              "items": {
-                "type": "string"
-              },
               "default": [
                 "someField,DESC"
-              ]
+              ],
+              "items": {
+                "type": "string"
+              }
             }
           }
         ],
@@ -249,9 +249,9 @@
             "description": "Zero-based page index (0..N)",
             "required": false,
             "schema": {
-              "minimum": 0,
               "type": "integer",
-              "default": 0
+              "default": 0,
+              "minimum": 0
             }
           },
           {
@@ -260,9 +260,9 @@
             "description": "The size of the page to be returned",
             "required": false,
             "schema": {
-              "minimum": 1,
               "type": "integer",
-              "default": 100
+              "default": 100,
+              "minimum": 1
             }
           },
           {
@@ -272,13 +272,13 @@
             "required": false,
             "schema": {
               "type": "array",
-              "items": {
-                "type": "string"
-              },
               "default": [
                 "someField,DESC",
                 "someoTHER,DESC"
-              ]
+              ],
+              "items": {
+                "type": "string"
+              }
             }
           }
         ],
@@ -309,9 +309,9 @@
             "description": "Zero-based page index (0..N)",
             "required": false,
             "schema": {
-              "minimum": 0,
               "type": "integer",
-              "default": 0
+              "default": 0,
+              "minimum": 0
             }
           },
           {
@@ -320,9 +320,9 @@
             "description": "The size of the page to be returned",
             "required": false,
             "schema": {
-              "minimum": 1,
               "type": "integer",
-              "default": 5
+              "default": 5,
+              "minimum": 1
             }
           },
           {
@@ -332,12 +332,12 @@
             "required": false,
             "schema": {
               "type": "array",
-              "items": {
-                "type": "string"
-              },
               "default": [
                 "name,ASC"
-              ]
+              ],
+              "items": {
+                "type": "string"
+              }
             }
           }
         ],

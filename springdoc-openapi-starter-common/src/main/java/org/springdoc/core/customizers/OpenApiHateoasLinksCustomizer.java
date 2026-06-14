@@ -62,14 +62,17 @@ public class OpenApiHateoasLinksCustomizer extends SpecFilter implements GlobalO
 
 	@Override
 	public void customise(OpenAPI openApi) {
-		ResolvedSchema resolvedLinkSchema = ModelConverters.getInstance(springDocConfigProperties.isOpenapi31())
-				.resolveAsResolvedSchema(new AnnotatedType(Link.class));
+		// Always add Link and Links schemas so they are present in the spec
+		// even when no HATEOAS resource controller is directly declared.
+		ModelConverters modelConverters = ModelConverters.getInstance(springDocConfigProperties != null && springDocConfigProperties.isOpenapi31());
+		ResolvedSchema resolvedLinkSchema = modelConverters.resolveAsResolvedSchema(new AnnotatedType(Link.class));
 		openApi
 				.schema("Link", resolvedLinkSchema.schema)
 				.schema("Links", new MapSchema()
 						.additionalProperties(new StringSchema())
 						.additionalProperties(new Schema<>().$ref(AnnotationsUtils.COMPONENTS_REF + "Link")));
-		if (springDocConfigProperties.isRemoveBrokenReferenceDefinitions())
+		// Remove orphaned $ref definitions from the earlier resolution pass.
+		if (springDocConfigProperties != null && springDocConfigProperties.isRemoveBrokenReferenceDefinitions())
 			this.removeBrokenReferenceDefinitions(openApi);
 	}
 }

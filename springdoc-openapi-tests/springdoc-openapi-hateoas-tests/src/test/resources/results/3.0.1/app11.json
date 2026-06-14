@@ -31,14 +31,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/TestDto"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ExtendedTestDto"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/TestDto"
                 }
               }
             }
@@ -88,6 +81,23 @@
           }
         ]
       },
+      "TestDto": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "_links": {
+            "$ref": "#/components/schemas/Links"
+          }
+        },
+        "description": "Parent DTO extending RepresentationModel",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ExtendedTestDto"
+          }
+        ]
+      },
       "Link": {
         "type": "object",
         "properties": {
@@ -117,20 +127,11 @@
           }
         }
       },
-      "TestDto": {
+      "Links": {
         "type": "object",
-        "properties": {
-          "field": {
-            "type": "string"
-          },
-          "_links": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Link"
-            }
-          }
-        },
-        "description": "Parent DTO extending RepresentationModel"
+        "additionalProperties": {
+          "$ref": "#/components/schemas/Link"
+        }
       }
     }
   }

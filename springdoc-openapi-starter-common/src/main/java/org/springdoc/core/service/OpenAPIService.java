@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.introspect.DefaultAccessorNamingStrategy;
 import tools.jackson.databind.json.JsonMapper;
 import io.swagger.v3.core.jackson.TypeNameResolver;
 import io.swagger.v3.core.util.AnnotationsUtils;
@@ -249,9 +249,12 @@ public class OpenAPIService implements ApplicationContextAware {
 			calculatedOpenAPI.setPaths(new Paths());
 		}
 		else {
-			calculatedOpenAPI = cloneViaJson(openAPI, OpenAPI.class, JsonMapper.builder()
+			JsonMapper jsonMapper = JsonMapper.builder()
+					.accessorNaming(new DefaultAccessorNamingStrategy.Provider()
+							.withFirstCharAcceptance(true, true))
 					.changeDefaultPropertyInclusion(incl -> JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.ALWAYS))
-					.build());
+					.build();
+			calculatedOpenAPI = cloneViaJson(openAPI, OpenAPI.class, jsonMapper);
 		}
 
 		if (apiDef.isPresent()) {
