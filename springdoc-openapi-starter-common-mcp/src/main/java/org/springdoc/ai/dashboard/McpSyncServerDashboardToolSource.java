@@ -126,7 +126,7 @@ public class McpSyncServerDashboardToolSource implements McpDashboardToolSource 
 				result = spec.callHandler().apply(null, new CallToolRequest(toolName, argsMap));
 			}
 			else {
-				result = spec.call().apply(null, argsMap);
+				throw new IllegalStateException("No callHandler available for tool: " + toolName);
 			}
 			long duration = System.currentTimeMillis() - start;
 			String resultText = extractResultText(result);
