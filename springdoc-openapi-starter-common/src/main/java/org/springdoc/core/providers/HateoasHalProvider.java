@@ -29,11 +29,10 @@ package org.springdoc.core.providers;
 import java.util.List;
 import java.util.Optional;
 
-import org.springdoc.core.data.SpringDocJackson2HalModule;
+import org.springdoc.core.utils.SpringDocHalJacksonModuleUtils;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.ReflectionUtils;
-import tools.jackson.databind.ObjectMapper;
 
 /**
  * The type Hateoas hal provider.
@@ -102,12 +101,6 @@ public class HateoasHalProvider implements InitializingBean {
 		if (!isHalEnabled()) {
 			return;
 		}
-		var mapper = objectMapperProvider.jsonMapper();
-		if (!SpringDocJackson2HalModule.isAlreadyRegisteredIn(mapper)) {
-            ObjectMapper objectMapper = mapper.rebuild()
-					.addModule(new SpringDocJackson2HalModule())
-					.build();
-			objectMapperProvider.setJsonMapper(objectMapper);
-		}
+		SpringDocHalJacksonModuleUtils.ensureHalModuleRegistered(objectMapperProvider);
 	}
 }

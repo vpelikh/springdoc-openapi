@@ -35,9 +35,15 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
-import io.swagger.v3.core.converter.AnnotatedType;
+import io.swagger.v3.core.jackson.ModelResolver;
 import io.swagger.v3.core.converter.ModelConverters;
+import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ResolvedSchema;
+import io.swagger.v3.core.util.Json;
+import io.swagger.v3.core.util.Json31;
+
+import org.springdoc.core.providers.ObjectMapperProvider;
+import tools.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
@@ -105,14 +111,20 @@ public class SpringDocDataRestUtils {
 	private final RepositoryRestConfiguration repositoryRestConfiguration;
 
 	/**
+	 * The Object mapper provider.
+	 */
+	private final ObjectMapperProvider objectMapperProvider;
+
+	/**
 	 * Instantiates a new Spring doc data rest utils.
 	 *
 	 * @param linkRelationProvider        the link relation provider
 	 * @param repositoryRestConfiguration the repository rest configuration
 	 */
-	public SpringDocDataRestUtils(LinkRelationProvider linkRelationProvider, RepositoryRestConfiguration repositoryRestConfiguration) {
+	public SpringDocDataRestUtils(LinkRelationProvider linkRelationProvider, RepositoryRestConfiguration repositoryRestConfiguration, ObjectMapperProvider objectMapperProvider) {
 		this.linkRelationProvider = linkRelationProvider;
 		this.repositoryRestConfiguration = repositoryRestConfiguration;
+		this.objectMapperProvider = objectMapperProvider;
 	}
 
 	/**
@@ -201,6 +213,26 @@ public class SpringDocDataRestUtils {
 	}
 
 	/**
+	 * Resolve schema for a domain type using the application-configured ObjectMapper.
+	 *
+	 * @param domainType the domain type to resolve
+	 * @param openapi31  whether OpenAPI 3.1 is active
+	 * @return the resolved schema
+	 */
+	private ResolvedSchema resolveSchema(Class<?> domainType, boolean openapi31) {
+		ObjectMapper mapper;
+		if (objectMapperProvider != null) {
+			mapper = objectMapperProvider.jsonMapper();
+		}
+		else {
+			mapper = openapi31 ? Json31.mapper() : Json.mapper();
+		}
+		ModelConverters modelConverters = new ModelConverters(openapi31);
+		modelConverters.addConverter(new ModelResolver(mapper));
+		return modelConverters.resolveAsResolvedSchema(new AnnotatedType().type(domainType));
+	}
+
+	/**
 	 * Gets request body schema.
 	 *
 	 * @param className  the class name
@@ -215,7 +247,7 @@ public class SpringDocDataRestUtils {
 		schema.set$ref(newKey);
 		//create new schema
 		Class schemaImplementation = entityInoMap.get(className).getDomainType();
-		ResolvedSchema resolvedSchema = ModelConverters.getInstance(openapi31).readAllAsResolvedSchema(new AnnotatedType().type(schemaImplementation));
+		ResolvedSchema resolvedSchema = resolveSchema(schemaImplementation, openapi31);
 		Map<String, Schema> schemaMap;
 		if (resolvedSchema != null) {
 			schemaMap = resolvedSchema.referencedSchemas;
@@ -331,7 +363,7 @@ public class SpringDocDataRestUtils {
 	private Schema createNewResponseSchema(String className, Components components, boolean openapi31) {
 		Class schemaImplementation = entityInoMap.get(className).getDomainType();
 		Schema schemaObject = new Schema();
-		ResolvedSchema resolvedSchema = ModelConverters.getInstance(openapi31).readAllAsResolvedSchema(new AnnotatedType().type(schemaImplementation));
+		ResolvedSchema resolvedSchema = resolveSchema(schemaImplementation, openapi31);
 		Map<String, Schema> schemaMap;
 		if (resolvedSchema != null) {
 			schemaMap = resolvedSchema.referencedSchemas;

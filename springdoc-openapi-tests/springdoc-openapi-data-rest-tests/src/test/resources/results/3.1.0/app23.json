@@ -819,16 +819,16 @@
               "$ref": "#/components/schemas/AbstractJsonSchemaPropertyObject"
             }
           },
-          "requiredProperties": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "definitions": {
             "type": "object",
             "additionalProperties": {
               "$ref": "#/components/schemas/Item"
+            }
+          },
+          "requiredProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           },
           "type": {
@@ -945,7 +945,6 @@
         }
       },
       "ClinicRequestBody": {
-        "type": "object",
         "properties": {
           "id": {
             "type": "integer",
@@ -961,7 +960,6 @@
         ]
       },
       "DoctorRequestBody": {
-        "type": "object",
         "properties": {
           "id": {
             "type": "integer",
@@ -976,7 +974,6 @@
         }
       },
       "ClinicResponse": {
-        "type": "object",
         "properties": {
           "name": {
             "type": "string",
