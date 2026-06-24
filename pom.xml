@@ -67,7 +67,6 @@
 		<jjwt.version>0.13.0</jjwt.version>
 		<therapi-runtime-javadoc.version>0.15.0</therapi-runtime-javadoc.version>
 		<spring-cloud-function.version>5.0.3</spring-cloud-function.version>
-		<spring-security-oauth2-authorization-server.version>7.0.6</spring-security-oauth2-authorization-server.version>
 		<scalar.version>0.5.55</scalar.version>
 		<spring-ai.version>2.0.0</spring-ai.version>
 		<frontend-maven-plugin.version>2.0.1</frontend-maven-plugin.version>
@@ -100,12 +99,6 @@
 				<version>${spring-cloud-function.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
-			</dependency>
-			<!-- spring Security Oauth2 Authorization Server-->
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-oauth2-authorization-server</artifactId>
-				<version>${spring-security-oauth2-authorization-server.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.scalar.maven</groupId>
