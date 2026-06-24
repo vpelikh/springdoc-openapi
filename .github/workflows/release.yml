@@ -18,32 +18,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
-          fetch-depth: 0                        # fetch all history and tags
-
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.10'
+          fetch-depth: 0
 
       - name: Set up Java 17
         uses: actions/setup-java@v5
         with:
           java-version: 17
           distribution: temurin
+          cache: 'maven'
           server-id: central
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.OSSRH_GPG_PRIVATE_KEY }}
-
-      - name: Cache local Maven repository
-        uses: actions/cache@v5
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
 
       - name: Compute release version
         id: version
@@ -55,11 +43,11 @@ jobs:
         run: . ./CI/prepare-release-commit.sh
 
       - name: Build and test
-        run: mvn --no-transfer-progress -B install --file pom.xml
+        run: ./mvnw --no-transfer-progress -B -T 1C install --file pom.xml
 
       - name: Deploy to Maven Central
         if: success()
-        run: mvn --no-transfer-progress -B -Pgpg deploy
+        run: ./mvnw --no-transfer-progress -B -T 1C -Prelease deploy
 
       - name: Tag and push release tag
         if: success()
@@ -67,21 +55,35 @@ jobs:
           git tag "v${RELEASE_VERSION}"
           git push origin "v${RELEASE_VERSION}"
 
-      - name: Publish GitHub release
+      - name: Create draft GitHub Release
         if: success()
-        run: python CI/publishRelease.py "v${RELEASE_VERSION}"
+        run: |
+          # Determine base tag for release notes
+          if [ "$IS_PRERELEASE" = "true" ]; then
+            BASE_TAG=$(gh release list --limit 1 --exclude-drafts --json tagName -q '.[0].tagName')
+          else
+            BASE_TAG=$(gh release list --limit 1 --exclude-drafts --exclude-pre-releases --json tagName -q '.[0].tagName')
+          fi
+          TITLE="v${RELEASE_VERSION}"
+          gh release create "v${RELEASE_VERSION}" \
+            --title "$TITLE" \
+            --notes-start-tag "$BASE_TAG" \
+            --generate-notes \
+            --draft \
+            --prerelease="$IS_PRERELEASE"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Generate Javadocs for springdoc-openapi-starter-common
+      - name: Generate Javadocs
         if: success()
-        run: mvn -pl springdoc-openapi-starter-common javadoc:javadoc -DskipTests
+        run: ./mvnw -pl springdoc-openapi-starter-common javadoc:javadoc -DskipTests
 
       - name: Prepare javadocs
         if: success()
         run: . ./CI/prepare-javadocs.sh
 
-      - name: Checkout gh-pages and publish javadocs
-        if: success()
-        uses: actions/checkout@v6
+      - name: Checkout gh-pages
+        uses: actions/checkout@v7
         with:
           ref: "gh-pages"
           fetch-depth: 0
@@ -92,15 +94,19 @@ jobs:
           TMPDIR="$(dirname -- "${0}")"
           . $TMPDIR/publish-javadocs.sh
 
-      - name: Checkout main (for wiki update)
+      - name: Publish draft release
         if: success()
-        uses: actions/checkout@v6
-        with:
-          ref: "main"
-          fetch-depth: 0
+        run: gh release edit "v${RELEASE_VERSION}" --draft=false
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bump SNAPSHOT version on main (final release only)
+        if: success() && github.event.inputs.release_type == 'release'
+        run: . ./CI/bump-snapshot.sh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     env:
-      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
       MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
       MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

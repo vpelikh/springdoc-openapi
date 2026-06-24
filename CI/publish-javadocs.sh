@@ -10,13 +10,13 @@ SC_RELEASE_TAG="v${RELEASE_VERSION}"
 #####################
 
 # Publish versioned javadocs
-mkdir -p $CUR/springdoc-openapi/${SC_RELEASE_TAG}
-cp -aR $TMPDIR/apidocs $CUR/springdoc-openapi/${SC_RELEASE_TAG}
+mkdir -p $CUR/springdoc-openapi-starter-common/${SC_RELEASE_TAG}
+cp -aR $TMPDIR/apidocs $CUR/springdoc-openapi-starter-common/${SC_RELEASE_TAG}
 
 # Publish to "latest" (always points to the most recent release)
-rm -rf $CUR/springdoc-openapi/latest
-mkdir -p $CUR/springdoc-openapi/latest
-cp -aR $TMPDIR/apidocs $CUR/springdoc-openapi/latest
+rm -rf $CUR/springdoc-openapi-starter-common/latest
+mkdir -p $CUR/springdoc-openapi-starter-common/latest
+cp -aR $TMPDIR/apidocs $CUR/springdoc-openapi-starter-common/latest
 
 git add -A
 git commit -m "apidocs for release ${SC_RELEASE_TAG}"
