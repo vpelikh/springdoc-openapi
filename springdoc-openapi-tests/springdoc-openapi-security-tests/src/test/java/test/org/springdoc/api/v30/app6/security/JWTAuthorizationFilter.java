@@ -91,6 +91,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 			try {
 				user = Jwts.parser()
 						.setSigningKey(key)
+						.build()
 						.parseClaimsJws(token.replace(WebSecurity.TokenPrefix, ""))
 						.getBody()
 						.getSubject();
