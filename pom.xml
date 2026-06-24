@@ -53,6 +53,10 @@
 	</modules>
 
 	<properties>
+        <maven.compiler.release>17</maven.compiler.release>
+        <skipPublishing>false</skipPublishing>
+        <skip.npm>true</skip.npm>
+
 		<maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
 		<maven-release-plugin.version>3.3.1</maven-release-plugin.version>
 		<central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
@@ -66,9 +70,6 @@
 		<spring-security-oauth2-authorization-server.version>7.0.6</spring-security-oauth2-authorization-server.version>
 		<scalar.version>0.5.55</scalar.version>
 		<spring-ai.version>2.0.0</spring-ai.version>
-		<mcp-sdk.version>0.18.3</mcp-sdk.version>
-		<skipPublishing>false</skipPublishing>
-		<skip.npm>true</skip.npm>
 		<frontend-maven-plugin.version>2.0.1</frontend-maven-plugin.version>
 		<node.version>v22.14.0</node.version>
 	</properties>
