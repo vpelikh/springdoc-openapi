@@ -26,7 +26,6 @@
 
 package org.springdoc.core.providers;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -36,13 +35,13 @@ import java.util.stream.Stream;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.models.OpenAPI;
-import org.apache.commons.lang3.reflect.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.data.ControllerType;
 import org.springdoc.core.data.DataRestRepository;
 import org.springdoc.core.data.DataRestRouterOperationService;
 import org.springdoc.core.fn.RouterOperation;
+import org.springdoc.core.utils.MethodUtils;
 import org.springdoc.core.utils.SpringDocDataRestUtils;
 import tools.jackson.databind.ObjectMapper;
 
@@ -302,13 +301,7 @@ public class SpringRepositoryRestResourceProvider implements RepositoryRestResou
 			handlerMappingList = new ArrayList<>();
 			if (delegatingHandlerMappingClass != null) {
 				Object object = applicationContext.getBean(delegatingHandlerMappingClass);
-				try {
-					handlerMappingList = (List<HandlerMapping>) MethodUtils.invokeMethod(object, "getDelegates");
-				}
-				catch (NoSuchMethodException | IllegalAccessException |
-					   InvocationTargetException e) {
-					LOGGER.warn(e.getMessage());
-				}
+				handlerMappingList = (List<HandlerMapping>) MethodUtils.invokeMethod(object, "getDelegates");
 			}
 		}
 

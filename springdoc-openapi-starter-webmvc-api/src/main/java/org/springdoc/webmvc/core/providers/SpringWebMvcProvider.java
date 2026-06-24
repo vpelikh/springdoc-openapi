@@ -35,8 +35,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
+import org.springdoc.core.utils.StringUtils;
+import org.springdoc.core.utils.FieldUtils;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.providers.SpringWebProvider;
 import org.springdoc.core.versions.HeaderVersionStrategy;

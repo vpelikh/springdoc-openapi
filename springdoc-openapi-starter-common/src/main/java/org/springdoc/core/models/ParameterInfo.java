@@ -28,7 +28,7 @@ package org.springdoc.core.models;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.extractor.DelegatingMethodParameter;

@@ -30,7 +30,7 @@ import java.net.URI;
 import java.util.Optional;
 
 import io.swagger.v3.oas.annotations.Operation;
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.StringUtils;
 import reactor.core.publisher.Mono;
 
 import org.springframework.beans.factory.annotation.Value;

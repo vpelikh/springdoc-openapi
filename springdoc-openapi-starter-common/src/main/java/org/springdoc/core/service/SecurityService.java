@@ -45,7 +45,7 @@ import io.swagger.v3.oas.models.security.OAuthFlows;
 import io.swagger.v3.oas.models.security.Scopes;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.StringUtils;
 import org.springdoc.core.utils.PropertyResolverUtils;
 
 import org.springframework.core.annotation.AnnotatedElementUtils;

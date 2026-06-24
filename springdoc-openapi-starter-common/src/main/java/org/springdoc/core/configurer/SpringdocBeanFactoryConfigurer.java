@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.swagger.v3.oas.models.OpenAPI;
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.StringUtils;
 import org.springdoc.core.customizers.SpecPropertiesCustomizer;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springdoc.core.properties.SpringDocConfigProperties;

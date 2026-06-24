@@ -39,7 +39,7 @@ import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
-import org.apache.commons.lang3.reflect.FieldUtils;
+import org.springdoc.core.utils.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.configuration.hints.SpringDocSecurityHints;
@@ -139,14 +139,9 @@ public class SpringDocSecurityConfiguration {
 						String mediaType = org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 						if (optionalDefaultLoginPageGeneratingFilter.isPresent()) {
 							DefaultLoginPageGeneratingFilter defaultLoginPageGeneratingFilter = optionalDefaultLoginPageGeneratingFilter.get();
-							try {
-								boolean formLoginEnabled = (boolean) FieldUtils.readDeclaredField(defaultLoginPageGeneratingFilter, "formLoginEnabled", true);
-								if (formLoginEnabled)
-									mediaType = org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
-							}
-							catch (IllegalAccessException e) {
-								LOGGER.warn(e.getMessage());
-							}
+							boolean formLoginEnabled = (boolean) FieldUtils.readDeclaredField(defaultLoginPageGeneratingFilter, "formLoginEnabled", true);
+							if (formLoginEnabled)
+								mediaType = org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 						}
 						RequestBody requestBody = new RequestBody().content(new Content().addMediaType(mediaType, new MediaType().schema(schema)));
 						operation.requestBody(requestBody);

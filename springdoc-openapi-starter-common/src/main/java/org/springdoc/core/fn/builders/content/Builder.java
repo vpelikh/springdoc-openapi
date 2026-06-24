@@ -36,7 +36,7 @@ import io.swagger.v3.oas.annotations.media.Encoding;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.SchemaProperty;
-import org.apache.commons.lang3.ArrayUtils;
+import org.springdoc.core.utils.ArrayUtils;
 
 /**
  * The type Content builder.

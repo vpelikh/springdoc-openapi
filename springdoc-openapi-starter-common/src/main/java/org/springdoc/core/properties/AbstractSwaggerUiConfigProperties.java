@@ -32,7 +32,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.StringUtils;
 import org.springdoc.core.utils.Constants;
 
 import static org.springdoc.core.utils.Constants.GROUP_NAME_NOT_NULL_OR_EMPTY;

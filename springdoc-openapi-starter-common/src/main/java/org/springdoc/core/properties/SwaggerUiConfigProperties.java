@@ -32,7 +32,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.StringUtils;
 import org.springdoc.core.configuration.SpringDocConfiguration;
 import org.springdoc.core.utils.Constants;
 

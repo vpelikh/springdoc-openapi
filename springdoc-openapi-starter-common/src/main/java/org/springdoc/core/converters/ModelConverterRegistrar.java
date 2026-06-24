@@ -29,6 +29,7 @@ package org.springdoc.core.converters;
 import java.util.List;
 import java.util.Optional;
 
+import org.springdoc.core.utils.FieldUtils;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.cfg.MapperBuilder;
 import io.swagger.v3.core.converter.ModelConverter;
@@ -36,7 +37,6 @@ import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.core.jackson.ModelResolver;
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.core.util.Json31;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.utils.SpringDocHalJacksonModuleUtils;
@@ -109,16 +109,10 @@ public class ModelConverterRegistrar {
 	 */
 	@SuppressWarnings("unchecked")
 	private Optional<ModelConverter> getRegisteredConverterSameAs(ModelConverter modelConverter) {
-		try {
-			List<ModelConverter> modelConverters = (List<ModelConverter>) FieldUtils.readDeclaredField(modelConvertersInstance, "converters", true);
-			return modelConverters.stream()
-					.filter(registeredModelConverter -> isSameConverter(registeredModelConverter, modelConverter))
-					.findFirst();
-		}
-		catch (IllegalAccessException exception) {
-			LOGGER.warn(exception.getMessage());
-		}
-		return Optional.empty();
+		List<ModelConverter> modelConverters = (List<ModelConverter>) FieldUtils.readDeclaredField(modelConvertersInstance, "converters", true);
+		return modelConverters.stream()
+				.filter(registeredModelConverter -> isSameConverter(registeredModelConverter, modelConverter))
+				.findFirst();
 	}
 
 	/**

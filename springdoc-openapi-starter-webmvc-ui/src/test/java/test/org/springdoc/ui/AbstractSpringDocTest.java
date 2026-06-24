@@ -18,7 +18,7 @@
 
 package test.org.springdoc.ui;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.StringUtils;
 import org.springdoc.core.utils.Constants;
 
 import org.springframework.boot.test.context.SpringBootTest;

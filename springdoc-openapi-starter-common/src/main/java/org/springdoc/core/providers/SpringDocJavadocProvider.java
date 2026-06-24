@@ -42,7 +42,7 @@ import com.github.therapi.runtimejavadoc.MethodJavadoc;
 import com.github.therapi.runtimejavadoc.ParamJavadoc;
 import com.github.therapi.runtimejavadoc.RuntimeJavadoc;
 import com.github.therapi.runtimejavadoc.ThrowsJavadoc;
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.StringUtils;
 
 import static java.lang.Math.min;
 import static java.util.stream.Collectors.toMap;

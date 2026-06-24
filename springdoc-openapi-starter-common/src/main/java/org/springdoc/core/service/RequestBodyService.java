@@ -40,7 +40,7 @@ import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import jakarta.validation.constraints.NotNull;
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.StringUtils;
 import org.springdoc.core.models.MethodAttributes;
 import org.springdoc.core.models.ParameterInfo;
 import org.springdoc.core.models.RequestBodyInfo;

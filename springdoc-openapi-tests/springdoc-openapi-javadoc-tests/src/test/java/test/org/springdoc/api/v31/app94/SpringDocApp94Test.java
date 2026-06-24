@@ -32,7 +32,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.commons.lang3.RandomStringUtils;
+import org.springdoc.core.utils.RandomStringUtils;
 import org.springdoc.core.customizers.OpenApiBuilderCustomizer;
 import org.springdoc.core.customizers.SpringDocCustomizers;
 import org.springdoc.core.properties.SpringDocConfigProperties;

@@ -29,7 +29,7 @@ package org.springdoc.core.models;
 import java.util.Objects;
 
 import io.swagger.v3.oas.models.parameters.Parameter;
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.StringUtils;
 
 /**
  * The type Parameter Id.

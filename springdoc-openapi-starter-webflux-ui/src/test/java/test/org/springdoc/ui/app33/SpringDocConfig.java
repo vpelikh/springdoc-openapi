@@ -2,7 +2,7 @@ package test.org.springdoc.ui.app33;
 
 import java.util.List;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
+import org.springdoc.core.utils.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

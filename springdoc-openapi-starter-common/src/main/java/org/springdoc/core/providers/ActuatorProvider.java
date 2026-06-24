@@ -44,7 +44,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.method.HandlerMethod;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.springdoc.core.utils.StringUtils.EMPTY;
 
 
 /**

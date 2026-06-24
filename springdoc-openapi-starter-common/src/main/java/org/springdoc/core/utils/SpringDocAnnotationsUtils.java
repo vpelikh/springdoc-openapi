@@ -65,8 +65,6 @@ import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.providers.JavadocProvider;
@@ -144,7 +142,7 @@ public class SpringDocAnnotationsUtils extends AnnotationsUtils {
 		Schema schemaN = null;
 		boolean openapi31 = SpecVersion.V31 == specVersion;
 		if (jsonView != null)
-			annotations = ArrayUtils.addAll(annotations, jsonView);
+			annotations = ArrayUtils.add(annotations, jsonView);
 
 		AnnotatedType annotatedType = new AnnotatedType(returnType)
 				.resolveAsRef(true)

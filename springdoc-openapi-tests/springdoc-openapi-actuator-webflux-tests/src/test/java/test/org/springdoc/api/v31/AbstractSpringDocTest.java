@@ -26,9 +26,9 @@
 
 package test.org.springdoc.api.v31;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
+import org.springdoc.core.utils.StringUtils;
 import org.springframework.boot.webflux.test.autoconfigure.WebFluxTest;
 
 

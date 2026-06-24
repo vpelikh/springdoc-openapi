@@ -30,7 +30,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 import io.swagger.v3.oas.annotations.Operation;
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.StringUtils;
 import org.springdoc.core.customizers.SpringDocCustomizers;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.providers.SpringDocProviders;

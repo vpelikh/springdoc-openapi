@@ -33,8 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.ArrayUtils;
+import org.springdoc.core.utils.StringUtils;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.util.CollectionUtils;
@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author bnasslahsen
  */
 public class RouterFunctionData {
-
+	public static final RequestMethod[] EMPTY_REQUEST_METHODS = new RequestMethod[0];
 
 	/**
 	 * The Path.
@@ -266,7 +266,7 @@ public class RouterFunctionData {
 		if (!CollectionUtils.isEmpty(methods)) {
 			return methods.stream().map(this::getRequestMethod).toArray(RequestMethod[]::new);
 		}
-		return ArrayUtils.toArray();
+		return EMPTY_REQUEST_METHODS;
 	}
 
 	/**

@@ -39,7 +39,7 @@ import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
-import org.apache.commons.lang3.reflect.FieldUtils;
+import org.springdoc.core.utils.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.properties.SpringDocConfigProperties;
@@ -230,13 +230,7 @@ public class ActuatorOperationCustomizer implements GlobalOperationComponentsCus
 	 * @return the parameter from field
 	 */
 	private Parameter getParameterFromField(OperationParameter operationParameter) {
-		try {
-			return (Parameter) FieldUtils.readDeclaredField(operationParameter, PARAMETER, true);
-		}
-		catch (IllegalAccessException e) {
-			LOGGER.warn(e.getMessage());
-			return null;
-		}
+		return (Parameter) FieldUtils.readDeclaredField(operationParameter, PARAMETER, true);
 	}
 
 	/**

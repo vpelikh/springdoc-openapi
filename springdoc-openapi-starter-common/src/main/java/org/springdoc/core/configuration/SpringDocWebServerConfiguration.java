@@ -2,7 +2,7 @@ package org.springdoc.core.configuration;
 
 import java.util.function.Supplier;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.StringUtils;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -16,7 +16,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.springdoc.core.utils.StringUtils.EMPTY;
 
 public class SpringDocWebServerConfiguration {
 

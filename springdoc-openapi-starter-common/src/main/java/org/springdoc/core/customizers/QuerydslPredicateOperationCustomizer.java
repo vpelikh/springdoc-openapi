@@ -46,8 +46,8 @@ import io.swagger.v3.core.util.PrimitiveType;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
+import org.springdoc.core.utils.FieldUtils;
+import org.springdoc.core.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.properties.SpringDocConfigProperties;
@@ -157,13 +157,7 @@ public class QuerydslPredicateOperationCustomizer implements GlobalOperationCust
 	 * @return the field value of boolean
 	 */
 	private boolean getFieldValueOfBoolean(QuerydslBindings instance, String fieldName) {
-		try {
-			return (boolean) FieldUtils.readDeclaredField(instance, fieldName, true);
-		}
-		catch (IllegalAccessException e) {
-			LOGGER.warn(e.getMessage());
-		}
-		return false;
+		return (boolean) FieldUtils.readDeclaredField(instance, fieldName, true);
 	}
 
 	/**
@@ -223,13 +217,7 @@ public class QuerydslPredicateOperationCustomizer implements GlobalOperationCust
 	 * @return the path spec
 	 */
 	private Map<String, Object> getPathSpec(QuerydslBindings instance, String fieldName) {
-		try {
-			return (Map<String, Object>) FieldUtils.readDeclaredField(instance, fieldName, true);
-		}
-		catch (IllegalAccessException e) {
-			LOGGER.warn(e.getMessage());
-		}
-		return Collections.emptyMap();
+		return (Map<String, Object>) FieldUtils.readDeclaredField(instance, fieldName, true);
 	}
 
 	/**
@@ -239,16 +227,10 @@ public class QuerydslPredicateOperationCustomizer implements GlobalOperationCust
 	 * @return the path from path spec
 	 */
 	private Optional<Path<?>> getPathFromPathSpec(Object instance) {
-		try {
-			if (instance == null) {
-				return Optional.empty();
-			}
-			return (Optional<Path<?>>) FieldUtils.readDeclaredField(instance, "path", true);
+		if (instance == null) {
+			return Optional.empty();
 		}
-		catch (IllegalAccessException e) {
-			LOGGER.warn(e.getMessage());
-		}
-		return Optional.empty();
+		return (Optional<Path<?>>) FieldUtils.readDeclaredField(instance, "path", true);
 	}
 
 	/***

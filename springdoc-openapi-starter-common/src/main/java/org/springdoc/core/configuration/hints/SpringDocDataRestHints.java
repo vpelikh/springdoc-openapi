@@ -28,7 +28,7 @@ package org.springdoc.core.configuration.hints;
 
 import java.util.Arrays;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
+import org.springdoc.core.utils.FieldUtils;
 import org.springdoc.core.extractor.DelegatingMethodParameter;
 
 import org.springframework.aot.hint.MemberCategory;

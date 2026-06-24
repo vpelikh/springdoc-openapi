@@ -32,7 +32,7 @@ import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.links.Link;
 import io.swagger.v3.oas.annotations.links.LinkParameter;
 import io.swagger.v3.oas.annotations.servers.Server;
-import org.apache.commons.lang3.ArrayUtils;
+import org.springdoc.core.utils.ArrayUtils;
 
 /**
  * The type Link builder.

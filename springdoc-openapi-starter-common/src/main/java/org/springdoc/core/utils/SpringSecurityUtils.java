@@ -26,8 +26,6 @@
 
 package org.springdoc.core.utils;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
-
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.web.util.pattern.PathPattern;
 
