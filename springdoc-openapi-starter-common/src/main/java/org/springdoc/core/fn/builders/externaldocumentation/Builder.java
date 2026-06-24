@@ -30,7 +30,7 @@ import java.lang.annotation.Annotation;
 
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.extensions.Extension;
-import org.apache.commons.lang3.ArrayUtils;
+import org.springdoc.core.utils.ArrayUtils;
 
 /**
  * The type External documentation builder.

@@ -23,7 +23,6 @@
 package test.org.springdoc.api.v31.app193;
 
 
-import org.apache.commons.lang3.JavaVersion;
 import org.junit.jupiter.api.Test;
 import org.springdoc.core.utils.Constants;
 import test.org.springdoc.api.AbstractCommonTest;
@@ -33,7 +32,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.apache.commons.lang3.SystemUtils.isJavaVersionAtLeast;
 import static org.hamcrest.Matchers.is;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -51,7 +49,7 @@ public class SpringDocApp193Test extends AbstractCommonTest {
 		// In Java 21 the getFirst() and getLast() methods were added to the List interface.
 		// Those are the POJO getters, therefore Jackson will add them during serialization.
 		// So there are two different expected results for Java prior 21 and starting from Java 21.
-		final var expectedResponseFile = isJavaVersionAtLeast(JavaVersion.JAVA_21) ? "app193-1.json" : "app193.json";
+		final var expectedResponseFile = Runtime.version().feature() >= 21 ? "app193-1.json" : "app193.json";
 		final String expected = getContent("results/3.1.0/" + expectedResponseFile);
 		assertEquals(expected, result, true);
 	}

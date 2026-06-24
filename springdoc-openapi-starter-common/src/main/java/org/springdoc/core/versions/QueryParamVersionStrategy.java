@@ -28,7 +28,7 @@ package org.springdoc.core.versions;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.springdoc.core.utils.ArrayUtils;
 
 /**
  * The type Query param version strategy.
@@ -66,7 +66,7 @@ public final class QueryParamVersionStrategy extends SpringDocVersionStrategy {
 
 	@Override
 	public void updateVersion(String version, String[] params) {
-		if(ArrayUtils.isEmpty(params)) { 
+		if(ArrayUtils.isEmpty(params)) {
 			setVersion(version);
 			return;
 		}

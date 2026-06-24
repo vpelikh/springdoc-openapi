@@ -28,6 +28,7 @@ package org.springdoc.core.configuration.hints;
 
 import java.util.Arrays;
 
+import org.springdoc.core.utils.FieldUtils;
 import tools.jackson.databind.BeanDescription;
 import io.swagger.v3.core.converter.ModelConverter;
 import io.swagger.v3.core.filter.SpecFilter;
@@ -77,7 +78,6 @@ import io.swagger.v3.oas.models.parameters.PathParameter;
 import io.swagger.v3.oas.models.parameters.QueryParameter;
 import io.swagger.v3.oas.models.security.Scopes;
 import io.swagger.v3.oas.models.servers.ServerVariables;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springdoc.core.properties.SpringDocConfigProperties.ModelConverters;
 import org.springdoc.core.properties.SwaggerUiConfigProperties;
 

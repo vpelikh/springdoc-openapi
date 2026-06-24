@@ -18,7 +18,7 @@
 
 package test.org.springdoc.ui.app1;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springdoc.core.utils.Constants;
 import test.org.springdoc.ui.AbstractSpringDocTest;

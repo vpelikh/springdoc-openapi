@@ -30,7 +30,7 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
+import org.springdoc.core.utils.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

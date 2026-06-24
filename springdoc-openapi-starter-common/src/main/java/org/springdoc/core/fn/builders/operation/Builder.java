@@ -36,8 +36,8 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.servers.Server;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.ArrayUtils;
+import org.springdoc.core.utils.StringUtils;
 import org.springdoc.core.fn.RouterOperation;
 
 /**

@@ -28,8 +28,8 @@ package org.springdoc.ui;
 
 import java.util.Objects;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.utils.ArrayUtils;
+import org.springdoc.core.utils.StringUtils;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.properties.SwaggerUiConfigParameters;
 import org.springdoc.core.properties.SwaggerUiConfigProperties;

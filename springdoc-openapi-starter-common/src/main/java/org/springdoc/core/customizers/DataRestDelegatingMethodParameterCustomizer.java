@@ -48,8 +48,8 @@ import io.swagger.v3.oas.annotations.media.DependentRequired;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
+import org.springdoc.core.utils.ArrayUtils;
+import org.springdoc.core.utils.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.providers.RepositoryRestConfigurationProvider;
@@ -108,20 +108,15 @@ public class DataRestDelegatingMethodParameterCustomizer implements DelegatingMe
 				(Pageable.class.isAssignableFrom(parameterType) || Sort.class.isAssignableFrom(parameterType))
 						&& (isSpringDataWebPropertiesPresent() || isRepositoryRestConfigurationPresent())
 		)) {
-			try {
-				Annotation[] parameterAnnotations = (Annotation[]) FieldUtils.readDeclaredField(methodParameter, "additionalParameterAnnotations", true);
-				if (ArrayUtils.isNotEmpty(parameterAnnotations))
-					for (int i = 0; i < parameterAnnotations.length; i++) {
-						if (Parameter.class.equals(parameterAnnotations[i].annotationType())) {
-							Optional<Annotation> annotationForField = getNewParameterAnnotationForField(methodParameter, pageableDefault, sortDefault);
-							if (annotationForField.isPresent())
-								parameterAnnotations[i] = annotationForField.get();
-						}
+			Annotation[] parameterAnnotations = (Annotation[]) FieldUtils.readDeclaredField(methodParameter, "additionalParameterAnnotations", true);
+			if (ArrayUtils.isNotEmpty(parameterAnnotations))
+				for (int i = 0; i < parameterAnnotations.length; i++) {
+					if (Parameter.class.equals(parameterAnnotations[i].annotationType())) {
+						Optional<Annotation> annotationForField = getNewParameterAnnotationForField(methodParameter, pageableDefault, sortDefault);
+						if (annotationForField.isPresent())
+							parameterAnnotations[i] = annotationForField.get();
 					}
-			}
-			catch (IllegalAccessException e) {
-				LOGGER.warn(e.getMessage());
-			}
+				}
 		}
 	}
 

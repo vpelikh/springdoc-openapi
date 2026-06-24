@@ -28,7 +28,7 @@ package org.springdoc.core.discoverer;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.springdoc.core.utils.ArrayUtils;
 
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.StandardReflectionParameterNameDiscoverer;
