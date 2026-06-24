@@ -144,23 +144,12 @@ public class McpSyncServerDashboardToolSource implements McpDashboardToolSource 
 	 * @param inputSchema the input schema
 	 * @return JSON string representation
 	 */
-	private String convertInputSchema(McpSchema.JsonSchema inputSchema) {
-		if (inputSchema == null) {
+	private String convertInputSchema(Map<String, Object> inputSchema) {
+		if (inputSchema == null || inputSchema.isEmpty()) {
 			return "{}";
 		}
 		try {
-			Map<String, Object> schemaMap = new HashMap<>();
-			schemaMap.put("type", inputSchema.type());
-			if (inputSchema.properties() != null) {
-				schemaMap.put("properties", inputSchema.properties());
-			}
-			if (inputSchema.required() != null) {
-				schemaMap.put("required", inputSchema.required());
-			}
-			if (inputSchema.additionalProperties() != null) {
-				schemaMap.put("additionalProperties", inputSchema.additionalProperties());
-			}
-			return OBJECT_MAPPER.writeValueAsString(schemaMap);
+			return OBJECT_MAPPER.writeValueAsString(inputSchema);
 		}
 		catch (JacksonException ex) {
 			return "{}";
