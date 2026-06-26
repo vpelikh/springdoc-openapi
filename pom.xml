@@ -211,7 +211,7 @@
 			</modules>
 		</profile>
 		<profile>
-			<id>gpg</id>
+			<id>release</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -282,7 +282,7 @@
 							<tagNameFormat>v@{project.version}</tagNameFormat>
 							<autoVersionSubmodules>true</autoVersionSubmodules>
 							<useReleaseProfile>false</useReleaseProfile>
-							<releaseProfiles>gpg</releaseProfiles>
+							<releaseProfiles>release</releaseProfiles>
 							<goals>deploy</goals>
 						</configuration>
 					</plugin>
