@@ -69,12 +69,6 @@ class SpringDocKotlinConfiguration() {
 			.addDeprecatedType(Deprecated::class.java)
 	}
 
-	@Bean
-	@Lazy(false)
-	fun kotlinRequiredPropertyCustomizer(objectMapperProvider: ObjectMapperProvider): KotlinRequiredPropertyCustomizer {
-		return KotlinRequiredPropertyCustomizer(objectMapperProvider)
-	}
-
 	@ConditionalOnClass(name = ["kotlin.reflect.full.KClasses"])
 	class KotlinReflectDependingConfiguration {
 
@@ -97,6 +91,12 @@ class SpringDocKotlinConfiguration() {
 		@ConditionalOnMissingBean
 		fun kotlinModelConverter(objectMapperProvider: ObjectMapperProvider): KotlinInlineClassUnwrappingConverter {
 			return KotlinInlineClassUnwrappingConverter(objectMapperProvider)
+		}
+		@Bean
+		@Lazy(false)
+		@ConditionalOnMissingBean
+		fun kotlinRequiredPropertyCustomizer(objectMapperProvider: ObjectMapperProvider): KotlinRequiredPropertyCustomizer {
+			return KotlinRequiredPropertyCustomizer(objectMapperProvider)
 		}
 
 		@Bean
