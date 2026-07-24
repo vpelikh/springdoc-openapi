@@ -710,7 +710,7 @@ public abstract class AbstractOpenApiResource extends SpecFilter {
 			// allow for customisation
 			operation = customizeOperation(operation, components, handlerMethod);
 
-			if (Strings.CS.contains(operationPath, "*")) {
+			if (operationPath.contains("*")) {
 				Matcher matcher = PATH_PATTERN.matcher(operationPath);
 				while (matcher.find()) {
 					String pathParam = matcher.group(1);
@@ -1409,7 +1409,7 @@ public abstract class AbstractOpenApiResource extends SpecFilter {
 				if (ParameterIn.PATH.toString().equals(parameter.getIn())) {
 					// check it's present in the path
 					String name = parameter.getName();
-					if (!Strings.CS.containsAny(operationPath, "{" + name + "}", "{*" + name + "}"))
+					if (!operationPath.contains("{" + name + "}") && !operationPath.contains("{*" + name + "}"))
 						paramIt.remove();
 				}
 			}
