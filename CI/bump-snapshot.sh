@@ -1,14 +1,14 @@
 #!/bin/bash
 set -e
 
-# This script bumps the version on main to the next SNAPSHOT after a final release.
+# This script bumps the version to the next SNAPSHOT after a final release.
 # It assumes we are on a detached HEAD after the release tag.
 
 RELEASE_VERSION="${RELEASE_VERSION:?}"
 CURRENT_BRANCH=$(git branch --show-current)
-if [ "$CURRENT_BRANCH" != "main" ]; then
-  git checkout main
-  git pull origin main
+if [ "$CURRENT_BRANCH" != "spring-boot-4" ]; then
+  git checkout spring-boot-4
+  git pull origin spring-boot-4
 fi
 
 # Compute next snapshot version: increment patch, e.g., 3.0.0 -> 3.0.1-SNAPSHOT
@@ -23,7 +23,7 @@ else
   exit 1
 fi
 
-echo "Bumping version on main to $NEXT_SNAPSHOT"
+echo "Bumping version to $NEXT_SNAPSHOT"
 
 # Update all POMs in one go
 ./mvnw versions:set -DnewVersion="${NEXT_SNAPSHOT}" -DgenerateBackupPoms=false
@@ -33,4 +33,4 @@ git config user.email "action@github.com"
 git config user.name "GitHub Action"
 git add -A
 git commit -m "Bump version to ${NEXT_SNAPSHOT}"
-git push origin main
+git push origin spring-boot-4
