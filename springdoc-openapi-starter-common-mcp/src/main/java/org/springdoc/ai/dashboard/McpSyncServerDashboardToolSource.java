@@ -121,13 +121,7 @@ public class McpSyncServerDashboardToolSource implements McpDashboardToolSource 
 		long start = System.currentTimeMillis();
 		try {
 			Map<String, Object> argsMap = parseArguments(arguments);
-			CallToolResult result;
-			if (spec.callHandler() != null) {
-				result = spec.callHandler().apply(null, new CallToolRequest(toolName, argsMap));
-			}
-			else {
-				throw new IllegalStateException("No callHandler available for tool: " + toolName);
-			}
+			CallToolResult result = spec.callHandler().apply(null, new CallToolRequest(toolName, argsMap));
 			long duration = System.currentTimeMillis() - start;
 			String resultText = extractResultText(result);
 			boolean isError = Boolean.TRUE.equals(result.isError());
@@ -140,7 +134,7 @@ public class McpSyncServerDashboardToolSource implements McpDashboardToolSource 
 	}
 
 	/**
-	 * Converts McpSchema.JsonSchema to a JSON string.
+	 * Converts the tool input schema map to a JSON string.
 	 * @param inputSchema the input schema
 	 * @return JSON string representation
 	 */
@@ -197,7 +191,7 @@ public class McpSyncServerDashboardToolSource implements McpDashboardToolSource 
 		Map<String, Type> returnTypes = new HashMap<>();
 		try {
 			Class<? extends Annotation> mcpToolAnnotation = (Class<? extends Annotation>) Class
-				.forName("org.springaicommunity.mcp.annotation.McpTool");
+				.forName("org.springframework.ai.mcp.annotation.McpTool");
 			Method nameMethod = mcpToolAnnotation.getMethod("name");
 			for (String beanName : applicationContext.getBeanDefinitionNames()) {
 				try {
@@ -217,11 +211,8 @@ public class McpSyncServerDashboardToolSource implements McpDashboardToolSource 
 				}
 			}
 		}
-		catch (ClassNotFoundException ex) {
-			// @McpTool annotation not on classpath — no return types available
-		}
 		catch (Exception ex) {
-			// Scanning failed — ignore
+			// @McpTool annotation not on classpath, or scanning failed — no return types available
 		}
 		return returnTypes;
 	}

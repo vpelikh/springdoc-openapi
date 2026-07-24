@@ -31,6 +31,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import tools.jackson.databind.ObjectMapper;
@@ -104,7 +105,7 @@ public class McpAuditLogger {
 	 * Optional in-memory sink set by {@link org.springdoc.ai.dashboard.McpAuditEventStore}
 	 * when the dashboard is active. {@code null} when the dashboard is not in use.
 	 */
-	private static volatile Consumer<String> eventSink;
+	private static final AtomicReference<Consumer<String>> EVENT_SINK = new AtomicReference<>();
 
 	private McpAuditLogger() {
 	}
@@ -116,7 +117,7 @@ public class McpAuditLogger {
 	 * @param sink the consumer to register, or {@code null} to unregister
 	 */
 	public static void setEventSink(Consumer<String> sink) {
-		eventSink = sink;
+		EVENT_SINK.set(sink);
 	}
 
 	/**
@@ -219,7 +220,7 @@ public class McpAuditLogger {
 
 			String json = MAPPER.writeValueAsString(root);
 			AUDIT_LOGGER.info(json);
-			Consumer<String> sink = eventSink;
+			Consumer<String> sink = EVENT_SINK.get();
 			if (sink != null) {
 				sink.accept(json);
 			}
@@ -276,11 +277,8 @@ public class McpAuditLogger {
 				}
 			}
 		}
-		catch (ClassNotFoundException ignored) {
-			// Spring Security not on classpath
-		}
 		catch (Exception ignored) {
-			// No authentication context or reflection failure
+			// Spring Security not on classpath, or no authentication context / reflection failure
 		}
 		return info;
 	}

@@ -402,8 +402,7 @@ public abstract class AbstractOpenApiResource extends SpecFilter {
 				}
 				getPaths(mappingsMap, finalLocale, openAPI);
 
-				if (OpenApiVersion.OPENAPI_3_1 == springDocConfigProperties.getApiDocs().getVersion())
-					handleComponentSchemaTypes(openAPI);
+				removeNullKeyComponentProperties(openAPI);
 
 				if (springDocConfigProperties.isTrimKotlinIndent())
 					this.trimIndent(openAPI);
@@ -466,6 +465,23 @@ public abstract class AbstractOpenApiResource extends SpecFilter {
 	}
 
 	/**
+	 * Removes {@code null}-keyed entries from the component schema properties. Swagger-core
+	 * inserts a {@code null} property key when resolving a {@code @JsonUnwrapped} member whose
+	 * content is a {@code $ref} (for example Spring HATEOAS {@code EntityModel.getContent()}
+	 * with HAL disabled), which otherwise breaks JSON serialization of the document.
+	 *
+	 * @param openAPI the open api
+	 */
+	private static void removeNullKeyComponentProperties(OpenAPI openAPI) {
+		if (openAPI.getComponents() == null || openAPI.getComponents().getSchemas() == null) {
+			return;
+		}
+		for (Schema<?> schema : openAPI.getComponents().getSchemas().values()) {
+			SpringDocUtils.removeNullKeyProperties(schema);
+		}
+	}
+
+	/**
 	 * Indents are removed for properties that are mainly used as “explanations” using Open API.
 	 *
 	 * @param openAPI the open api
@@ -473,20 +489,6 @@ public abstract class AbstractOpenApiResource extends SpecFilter {
 	private void trimIndent(OpenAPI openAPI) {
 		trimComponents(openAPI);
 		trimPaths(openAPI);
-	}
-
-	/**
-	 * Fix component schemas for OAS 3.1 post-processing.
-	 *
-	 * @param openAPI the open api
-	 */
-	private static void handleComponentSchemaTypes(OpenAPI openAPI) {
-		if (openAPI.getComponents() == null || openAPI.getComponents().getSchemas() == null) {
-			return;
-		}
-		for (Schema<?> schema : openAPI.getComponents().getSchemas().values()) {
-			SpringDocUtils.fixNullOnlyAdditionalProperties(schema);
-		}
 	}
 
 	/**
@@ -571,8 +573,9 @@ public abstract class AbstractOpenApiResource extends SpecFilter {
                 .filter(clazz -> isPackageToScan(clazz.getPackage()))
                 .toArray(Class<?>[]::new);
         Webhooks[] webhooksAttr = openAPIService.getWebhooks(refinedClasses);
-        if (ArrayUtils.isEmpty(webhooksAttr))
+        if (ArrayUtils.isEmpty(webhooksAttr)) {
 			return;
+		}
 		var webhooks = Arrays.stream(webhooksAttr).map(Webhooks::value).flatMap(Arrays::stream).toArray(Webhook[]::new);
 		Arrays.stream(webhooks).forEach(webhook -> {
 			io.swagger.v3.oas.annotations.Operation apiOperation = webhook.operation();
@@ -707,7 +710,7 @@ public abstract class AbstractOpenApiResource extends SpecFilter {
 			// allow for customisation
 			operation = customizeOperation(operation, components, handlerMethod);
 
-			if (StringUtils.contains(operationPath, "*")) {
+			if (Strings.CS.contains(operationPath, "*")) {
 				Matcher matcher = PATH_PATTERN.matcher(operationPath);
 				while (matcher.find()) {
 					String pathParam = matcher.group(1);
@@ -1406,7 +1409,7 @@ public abstract class AbstractOpenApiResource extends SpecFilter {
 				if (ParameterIn.PATH.toString().equals(parameter.getIn())) {
 					// check it's present in the path
 					String name = parameter.getName();
-					if (!StringUtils.containsAny(operationPath, "{" + name + "}", "{*" + name + "}"))
+					if (!Strings.CS.containsAny(operationPath, "{" + name + "}", "{*" + name + "}"))
 						paramIt.remove();
 				}
 			}

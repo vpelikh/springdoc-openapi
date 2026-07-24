@@ -86,14 +86,10 @@ public class ObjectMapperProvider extends ObjectMapperFactory {
 			if (springDocConfigProperties.isExplicitObjectSchema()) {
 				System.setProperty(Schema.EXPLICIT_OBJECT_SCHEMA_PROPERTY, "true");
 			}
-			else {
-				PrimitiveType.explicitObjectType = false;
-			}
 		}
 		else {
 			baseJsonMapper = Json.mapper();
 			baseYamlMapper = Yaml.mapper();
-			PrimitiveType.explicitObjectType = null;
 		}
 
 		jsonMapper = baseJsonMapper.rebuild()

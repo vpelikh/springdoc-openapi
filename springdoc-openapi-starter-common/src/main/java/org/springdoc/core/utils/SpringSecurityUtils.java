@@ -36,6 +36,9 @@ import org.springframework.web.util.pattern.PathPattern;
  */
 public final class SpringSecurityUtils {
 
+	private SpringSecurityUtils() {
+	}
+
 	/**
 	 * Gets path.
 	 *

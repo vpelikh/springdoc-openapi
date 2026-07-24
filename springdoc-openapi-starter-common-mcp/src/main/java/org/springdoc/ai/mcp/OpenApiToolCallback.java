@@ -49,8 +49,6 @@ import tools.jackson.databind.json.JsonMapper;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem.HttpMethod;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springdoc.ai.customizers.McpToolDefinitionContext;
 import org.springdoc.ai.properties.SpringDocAiProperties;
 import tools.jackson.core.JacksonException;
@@ -67,11 +65,6 @@ import org.springframework.ai.tool.definition.ToolDefinition;
  * @author bnasslahsen
  */
 public class OpenApiToolCallback implements ToolCallback {
-
-	/**
-	 * The logger.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(OpenApiToolCallback.class);
 
 	/**
 	 * The object mapper for JSON parsing.

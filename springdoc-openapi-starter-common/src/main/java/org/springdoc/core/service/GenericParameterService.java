@@ -33,6 +33,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -379,7 +380,7 @@ public class GenericParameterService {
 			Annotation[] paramAnnotations = getParameterAnnotations(methodParameter);
 			TypeAndTypeAnnotations resolved = resolveTypeAndTypeAnnotationsForParameter(methodParameter);
 			Type type = resolved.type();
-			Annotation[] typeAnnotations = resolved.typeAnnotations();
+			Annotation[] typeAnnotations = resolved.typeAnnotations().toArray(Annotation[]::new);
 			Annotation[] mergedAnnotations =
 					Stream.concat(
 							Arrays.stream(paramAnnotations),
@@ -428,7 +429,7 @@ public class GenericParameterService {
 				&& delegatingMethodParameter.getField() != null) {
 			AnnotatedType annotated = delegatingMethodParameter.getField().getAnnotatedType();
 			Type type = GenericTypeResolver.resolveType(annotated.getType(), methodParameter.getContainingClass());
-			return new TypeAndTypeAnnotations(type, annotationsFromAnnotatedTypeArguments(annotated));
+			return new TypeAndTypeAnnotations(type, Arrays.asList(annotationsFromAnnotatedTypeArguments(annotated)));
 		}
 
 		Type type = GenericTypeResolver.resolveType(methodParameter.getGenericParameterType(), methodParameter.getContainingClass());
@@ -438,17 +439,17 @@ public class GenericParameterService {
 				&& type == String.class) {
 			Class<?> restored = KotlinInlineParameterResolver.resolveInlineType(methodParameter, type);
 			return restored != null
-					? new TypeAndTypeAnnotations(restored, restored.getAnnotations())
-					: new TypeAndTypeAnnotations(type, new Annotation[0]);
+					? new TypeAndTypeAnnotations(restored, Arrays.asList(restored.getAnnotations()))
+					: new TypeAndTypeAnnotations(type, new ArrayList<>());
 		}
 
-		return new TypeAndTypeAnnotations(type, methodParameter.getParameterType().getAnnotations());
+		return new TypeAndTypeAnnotations(type, Arrays.asList(methodParameter.getParameterType().getAnnotations()));
 	}
 
 	/**
 	 * Pair of resolved Java type and type annotations merged with parameter annotations for {@code extractSchema}.
 	 */
-	private record TypeAndTypeAnnotations(Type type, Annotation[] typeAnnotations) {
+	private record TypeAndTypeAnnotations(Type type, List<Annotation> typeAnnotations) {
 	}
 
 	/**
@@ -637,6 +638,15 @@ public class GenericParameterService {
 	 */
 	public PropertyResolverUtils getPropertyResolverUtils() {
 		return propertyResolverUtils;
+	}
+
+	/**
+	 * Gets object mapper provider.
+	 *
+	 * @return the object mapper provider
+	 */
+	public ObjectMapperProvider getObjectMapperProvider() {
+		return objectMapperProvider;
 	}
 
 	/**
