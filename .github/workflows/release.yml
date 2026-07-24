@@ -12,7 +12,7 @@ on:
           - rc
           - release
         default: 'release'
-    branches: ["main"]
+    branches: ["spring-boot-4"]
 
 jobs:
   build:
