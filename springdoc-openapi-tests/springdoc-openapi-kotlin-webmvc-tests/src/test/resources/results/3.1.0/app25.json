@@ -20,11 +20,70 @@
         "responses": {
           "200": {
             "description": "OK",
-            "content": {}
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/OuterResponse"
+                }
+              }
+            }
           }
         }
       }
     }
   },
-  "components": {}
+  "components": {
+    "schemas": {
+      "NestedObject": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "OuterResponse": {
+        "type": "object",
+        "properties": {
+          "contractAddress": {
+            "type": "string"
+          },
+          "chainType": {
+            "type": "string",
+            "enum": [
+              "ETH"
+            ]
+          },
+          "nested": {
+            "type": "null",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NestedObject"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "chainType",
+          "contractAddress",
+          "success"
+        ]
+      }
+    }
+  }
 }
