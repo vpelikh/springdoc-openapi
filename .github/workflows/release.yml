@@ -82,7 +82,7 @@ jobs:
         if: success()
         run: . ./CI/prepare-javadocs.sh
 
-      - name: Bump SNAPSHOT version on master (final release only)
+      - name: Bump SNAPSHOT version
         if: success() && github.event.inputs.release_type == 'release'
         run: . ./CI/bump-snapshot.sh
         env:
