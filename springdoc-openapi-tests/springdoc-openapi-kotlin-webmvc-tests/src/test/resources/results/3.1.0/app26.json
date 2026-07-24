@@ -23,14 +23,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/Circle"
-                    },
-                    {
-                      "$ref": "#/components/schemas/Square"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/Shape"
                 }
               }
             }
@@ -71,12 +64,17 @@
         "discriminator": {
           "propertyName": "type"
         },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Circle"
+          },
+          {
+            "$ref": "#/components/schemas/Square"
+          }
+        ],
         "properties": {
           "label": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           }
         }
       },
