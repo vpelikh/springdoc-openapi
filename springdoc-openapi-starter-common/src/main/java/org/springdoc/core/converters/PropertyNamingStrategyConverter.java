@@ -30,10 +30,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.BeanDescription;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
+import tools.jackson.databind.BeanDescription;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.introspect.BeanPropertyDefinition;
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ModelConverter;
 import io.swagger.v3.core.converter.ModelConverterContext;
@@ -122,7 +122,7 @@ public class PropertyNamingStrategyConverter implements ModelConverter {
 	private void renameClobberedProperties(Schema<?> schema, ObjectMapper mapper, JavaType javaType) {
 		BeanDescription beanDescription;
 		try {
-			beanDescription = mapper.getSerializationConfig().introspect(javaType);
+			beanDescription = mapper._serializationContext().introspectBeanDescription(javaType);
 		}
 		catch (Exception e) {
 			return;
