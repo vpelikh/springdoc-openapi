@@ -38,7 +38,9 @@
         "type": "object",
         "properties": {
           "baz": {
-            "type": "string"
+            "type": "string",
+            "deprecated": true,
+            "description": "This is deprecated"
           }
         },
         "required": [
