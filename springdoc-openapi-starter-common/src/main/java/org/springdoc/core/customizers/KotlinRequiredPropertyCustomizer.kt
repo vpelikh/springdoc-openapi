@@ -25,6 +25,7 @@
  */
 package org.springdoc.core.customizers
 
+import io.swagger.v3.core.util.KotlinDetector
 import io.swagger.v3.core.converter.AnnotatedType
 import io.swagger.v3.core.converter.ModelConverter
 import io.swagger.v3.core.converter.ModelConverterContext
@@ -65,7 +66,9 @@ class KotlinRequiredPropertyCustomizer(
 
 		val javaType: JavaType =
 			objectMapperProvider.jsonMapper().constructType(type.type)
-		if (javaType.rawClass.packageName.startsWith("java.")) {
+
+		// Not a Kotlin-compiled class - skip to avoid marking Java DTO properties as required
+		if (!KotlinDetector.isKotlinClass(javaType.rawClass)) {
 			return resolvedSchema
 		}
 

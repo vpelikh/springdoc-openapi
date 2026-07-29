@@ -27,6 +27,7 @@
 package org.springdoc.core.customizers
 
 import tools.jackson.databind.JavaType
+import io.swagger.v3.core.util.KotlinDetector
 import io.swagger.v3.core.converter.AnnotatedType
 import io.swagger.v3.core.converter.ModelConverter
 import io.swagger.v3.core.converter.ModelConverterContext
@@ -56,28 +57,35 @@ class KotlinDeprecatedPropertyCustomizer(
 
 		val javaType: JavaType =
 			objectMapperProvider.jsonMapper().constructType(type.type)
-		if (javaType.rawClass.packageName.startsWith("java.")) {
+
+		// Not a Kotlin-compiled class - skip to avoid marking Java DTO properties as required
+		if (!KotlinDetector.isKotlinClass(javaType.rawClass)) {
 			return resolvedSchema
 		}
-		
-		val kotlinClass = javaType.rawClass.kotlin
+
+		val kotlinClass = try {
+			javaType.rawClass.kotlin
+		} catch (_: Throwable) {
+			return resolvedSchema
+		}
+
+		// Resolve target schema: for $ref look up the actual model, otherwise use the inline schema
+		val targetSchema = if (resolvedSchema != null && resolvedSchema.`$ref` != null) {
+			context.getDefinedModels()[resolvedSchema.`$ref`.substring(Components.COMPONENTS_SCHEMAS_REF.length)]
+		} else {
+			resolvedSchema
+		}
 
 		// Check each property of the class
 		for (prop in kotlinClass.memberProperties) {
 			val deprecatedAnnotation = prop.findAnnotation<Deprecated>()
-			prop.hasAnnotation<Deprecated>()
 			if (deprecatedAnnotation != null) {
 				val fieldName = prop.name
-				if (resolvedSchema!=null && resolvedSchema.`$ref` != null) {
-					val schema =
-						context.getDefinedModels()[resolvedSchema.`$ref`.substring(
-							Components.COMPONENTS_SCHEMAS_REF.length
-						)]
-					schema?.properties?.get(fieldName)?.deprecated = true
-					if (deprecatedAnnotation.message.isNotBlank()) {
-						schema?.properties?.get(fieldName)?.description =
-							schema?.properties?.get(fieldName)?.description?.takeIf { it.isNotBlank() }
-								?: deprecatedAnnotation.message
+				targetSchema?.properties?.get(fieldName)?.deprecated = true
+				if (deprecatedAnnotation.message.isNotBlank()) {
+					val currentDesc = targetSchema?.properties?.get(fieldName)?.description
+					if (currentDesc.isNullOrBlank()) {
+						targetSchema?.properties?.get(fieldName)?.description = deprecatedAnnotation.message
 					}
 				}
 			}
