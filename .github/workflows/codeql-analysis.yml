@@ -2,9 +2,9 @@ name: "Code scanning - action"
 
 on:
   push:
-    branches: [ "spring-boot-4" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "spring-boot-4" ]
+    branches: [ "main" ]
   schedule:
     - cron: '0 19 * * 1'
 

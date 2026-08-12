@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: "maven"
-    target-branch: "spring-boot-4"
+    target-branch: "main"
     directory: "/"
     schedule:
       interval: "daily"
