@@ -12,7 +12,7 @@ on:
           - rc
           - release
         default: 'release'
-    branches: ["spring-boot-4"]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -82,7 +82,7 @@ jobs:
         if: success()
         run: . ./CI/prepare-javadocs.sh
 
-      - name: Bump SNAPSHOT version
+      - name: Bump SNAPSHOT version on master (final release only)
         if: success() && github.event.inputs.release_type == 'release'
         run: . ./CI/bump-snapshot.sh
         env:

@@ -6,9 +6,9 @@ set -e
 
 RELEASE_VERSION="${RELEASE_VERSION:?}"
 CURRENT_BRANCH=$(git branch --show-current)
-if [ "$CURRENT_BRANCH" != "spring-boot-4" ]; then
-  git checkout spring-boot-4
-  git pull origin spring-boot-4
+if [ "$CURRENT_BRANCH" != "main" ]; then
+  git checkout main
+  git pull origin main
 fi
 
 # Compute next snapshot version: increment patch, e.g., 3.0.0 -> 3.0.1-SNAPSHOT
@@ -33,4 +33,4 @@ git config user.email "action@github.com"
 git config user.name "GitHub Action"
 git add -A
 git commit -m "Bump version to ${NEXT_SNAPSHOT}"
-git push origin spring-boot-4
+git push origin main

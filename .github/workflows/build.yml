@@ -2,13 +2,13 @@ name: Build
 
 on:
   push:
-    branches: [ "spring-boot-4" ]
+    branches: [ "main" ]
     paths-ignore:
       - '**.md'
       - 'docs/**'
       - '**.adoc'
   pull_request:
-    branches: [ "spring-boot-4" ]
+    branches: [ "main" ]
     paths-ignore:
       - '**.md'
       - 'docs/**'
@@ -37,7 +37,7 @@ jobs:
       - name: Build with Maven
         run: ./mvnw --no-transfer-progress -B -T 1C install --file pom.xml
 
-      - name: Deploy SNAPSHOT to Maven Central (only on push to spring-boot-4 with Java 17)
+      - name: Deploy SNAPSHOT to Maven Central
         if: github.event_name == 'push' && matrix.java == 17
         run: |
           MY_POM_VERSION=$(./mvnw -q -DforceStdout help:evaluate -Dexpression=project.version --non-recursive)
