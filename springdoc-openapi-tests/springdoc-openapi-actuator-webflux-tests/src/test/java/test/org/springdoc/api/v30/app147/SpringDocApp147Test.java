@@ -30,7 +30,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 		properties = { "management.endpoints.web.exposure.include=*",
 				"springdoc.show-actuator=true",
 				"management.endpoints.web.exposure.exclude=functions, shutdown",
-				"management.server.port=9287",
+				"management.server.port=9301",
 				"management.server.base-path=/test",
 				"management.endpoints.web.base-path=/application" })
 public class SpringDocApp147Test extends AbstractSpringDocActuatorTest {
