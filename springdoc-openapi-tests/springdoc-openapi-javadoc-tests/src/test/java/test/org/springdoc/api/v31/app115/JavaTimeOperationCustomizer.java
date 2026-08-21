@@ -28,7 +28,6 @@ package test.org.springdoc.api.v31.app115;
 
 import java.time.Duration;
 import java.util.Map;
-import java.util.Set;
 
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.media.Content;
@@ -59,8 +58,10 @@ class JavaTimeOperationCustomizer implements OperationCustomizer {
 				Content content = response.getContent();
 				if (content.containsKey(MediaType.APPLICATION_JSON_VALUE)) {
 					Schema schema = content.get(MediaType.APPLICATION_JSON_VALUE).getSchema();
-					schema.types(Set.of("string"));
-					schema.getProperties().clear();
+					schema.setType("string");
+					if (schema.getProperties() != null) {
+						schema.getProperties().clear();
+					}
 				}
 			}
 		}
