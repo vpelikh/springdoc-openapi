@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>io.github.vpelikh</groupId>
 		<artifactId>springdoc-openapi</artifactId>
-		<version>5.0.5</version>
+		<version>5.0.6-SNAPSHOT</version>
 	</parent>
 	<artifactId>springdoc-openapi-starter-webflux-api</artifactId>
 	<name>${project.artifactId}</name>
