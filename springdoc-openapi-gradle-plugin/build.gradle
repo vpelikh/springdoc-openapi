@@ -1,0 +1,66 @@
+// * * * * * * * * * * * *
+// Plugins
+// * * * * * * * * * * * *
+plugins {
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+}
+
+// * * * * * * * * * * * *
+// Project configuration
+// * * * * * * * * * * * *
+
+group = 'io.github.vpelikh'
+version = '5.0.6-SNAPSHOT'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        url = 'https://central.sonatype.com/repository/maven-snapshots/'
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+compileJava {
+    options.release = 17
+}
+
+dependencies {
+    implementation gradleApi()
+
+    testImplementation gradleTestKit()
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.4'
+}
+
+// Filter plugin version into the properties file at build time (like swagger plugin).
+processResources {
+    inputs.property 'pluginVersion', project.version
+    filteringCharset = 'UTF-8'
+    filesMatching('springdoc-openapi-gradle-plugin.properties') {
+        expand(pluginVersion: project.version)
+    }
+}
+
+// * * * * * * * * * * * *
+// Plugin publishing
+// * * * * * * * * * * * *
+
+gradlePlugin {
+    plugins {
+        springdoc {
+            id = 'io.github.vpelikh.springdoc-openapi-gradle-plugin'
+            implementationClass = 'org.springdoc.gradle.SpringDocOpenApiGradlePlugin'
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

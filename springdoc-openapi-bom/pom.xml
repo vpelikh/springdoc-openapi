@@ -60,6 +60,16 @@
 				<artifactId>springdoc-openapi-starter-webflux-mcp</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>io.github.vpelikh</groupId>
+				<artifactId>springdoc-openapi-generator-worker</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.github.vpelikh</groupId>
+				<artifactId>springdoc-openapi-maven-plugin</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

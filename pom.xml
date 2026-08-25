@@ -50,6 +50,8 @@
 		<module>springdoc-openapi-starter-webmvc-mcp</module>
 		<module>springdoc-openapi-starter-webflux-mcp</module>
 		<module>springdoc-openapi-bom</module>
+		<module>springdoc-openapi-generator-worker</module>
+		<module>springdoc-openapi-maven-plugin</module>
 		<module>springdoc-openapi-tests</module>
 	</modules>
 
