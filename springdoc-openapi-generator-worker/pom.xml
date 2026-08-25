@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>io.github.vpelikh</groupId>
+		<artifactId>springdoc-openapi</artifactId>
+		<version>5.0.6-SNAPSHOT</version>
+	</parent>
+	<artifactId>springdoc-openapi-generator-worker</artifactId>
+	<name>${project.artifactId}</name>
+	<description>Shared forked-JVM worker that boots a Spring Boot reactive or servlet context, runs springdoc-openapi, and writes the OpenAPI document. Used by the Gradle and Maven generator plugins.</description>
+
+	<dependencies>
+		<!-- Thin jar: no classes are bundled. It reuses the target app's own spring/springdoc
+		     classes at runtime, so it must NOT force either web stack onto the fork classpath
+		     (that would flip Spring Boot's deduced web application type). Both springdoc stack
+		     APIs are therefore compile-only; the worker invokes the resource via reflection. -->
+		<dependency>
+			<groupId>io.github.vpelikh</groupId>
+			<artifactId>springdoc-openapi-starter-webflux-api</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.github.vpelikh</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-web-server</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Compile-time servlet API for the WebMvc branch. -->
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Runtime: the worker builds mock requests / servlet contexts with spring-test. This is
+		     the only runtime-transitive dependency; it does not influence the web application
+		     type. -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+	</dependencies>
+</project>
