@@ -1,0 +1,12 @@
+name: 'Maven install (parallel, skip invoker ITs)'
+description: >
+  Builds and installs the whole Maven reactor to the local repo, skipping the
+  maven-plugin's invoker-plugin integration tests. Those run serially afterwards
+  via build-and-test-plugins.
+runs:
+  using: "composite"
+  steps:
+    - name: Maven install
+      shell: bash
+      run: |
+        ./mvnw --no-transfer-progress -B -T 1C -Dinvoker.skip=true install --file pom.xml

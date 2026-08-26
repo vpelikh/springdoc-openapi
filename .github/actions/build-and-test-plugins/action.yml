@@ -1,0 +1,21 @@
+name: 'Build and test plugins'
+description: >
+  Builds and installs the Maven reactor, builds the Gradle plugin, and runs the
+  Maven plugin's integration tests. Shared by the Build and Release workflows so
+  the application build+test sequence is defined in one place.
+runs:
+  using: "composite"
+  steps:
+    - name: Maven install (parallel, skip invoker ITs)
+      uses: ./.github/actions/maven-install
+
+    - name: Build Gradle plugin
+      shell: bash
+      run: |
+        cd ./springdoc-openapi-gradle-plugin
+        ./gradlew build --info --build-cache --parallel
+
+    - name: Maven plugin integration tests
+      shell: bash
+      run: |
+        ./mvnw --no-transfer-progress -B -pl springdoc-openapi-maven-plugin verify

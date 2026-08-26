@@ -10,6 +10,9 @@ git config user.name "GitHub Action"
 # Update all Maven POMs in one go
 ./mvnw versions:set -DnewVersion="${RELEASE_VERSION}" -DgenerateBackupPoms=false
 
+# Update gradle.properties
+sed -i "s/version=.*/version=${RELEASE_VERSION}/" springdoc-openapi-gradle-plugin/gradle.properties
+
 # Stage all changes and commit (detached)
 git add -A
 git commit -m "Release version ${RELEASE_VERSION}"
