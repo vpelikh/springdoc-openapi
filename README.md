@@ -52,6 +52,7 @@ This project is sponsored by
     - [spring-webflux support with Annotated Controllers](#spring-webflux-support-with-annotated-controllers)
     - [Using a separate management port (Spring Boot 4)](#using-a-separate-management-port-spring-boot-3)
     - [When Spring Security is enabled](#when-spring-security-is-enabled)
+    - [Generator plugins (build-time)](#generator-plugins-build-time)
 - [Acknowledgements](#acknowledgements)
     - [Contributors](#contributors)
     - [Additional Support](#additional-support)
@@ -316,6 +317,77 @@ SecurityFilterChain api(HttpSecurity http) throws Exception {
   return http.build();
 }
 ```
+
+## Generator plugins (build-time)
+
+Beside the runtime libraries above, this project ships two build-time generator plugins
+that produce an OpenAPI document for a Spring Boot application **without leaving a web
+server running**. They fork a dedicated JVM that boots the application context, lets
+springdoc-openapi build the spec, writes it to `target/docs` (Maven) or `build/docs`
+(Gradle), and shuts the context down.
+
+Both plugins share a single implementation — the `springdoc-openapi-generator-worker`
+module — which detects the target app's stack (WebFlux vs WebMvc) from its classpath and
+dispatches to the matching generator. WebFlux is genuinely serverless (a no-op web server
+factory, no port bound); WebMvc starts a short-lived embedded server on an ephemeral port.
+
+- **Gradle plugin** — `io.github.vpelikh.springdoc-openapi-gradle-plugin`
+- **Maven plugin** — `springdoc-openapi-maven-plugin`
+
+### Gradle plugin
+
+Apply the plugin and set the application's main class:
+
+```groovy
+plugins {
+    id 'java'
+    id 'io.github.vpelikh.springdoc-openapi-gradle-plugin' version '5.0.6-SNAPSHOT'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:4.1.1'
+    implementation 'io.github.vpelikh:springdoc-openapi-starter-webflux-api:5.0.6-SNAPSHOT'
+}
+
+openApiGenerate {
+    mainClass = 'com.example.YourApplication'
+}
+```
+
+Run `./gradlew generateOpenApi` to generate the spec.
+
+### Maven plugin
+
+Bind the goal to the `package` phase or invoke it directly:
+
+```xml
+<plugin>
+    <groupId>io.github.vpelikh</groupId>
+    <artifactId>springdoc-openapi-maven-plugin</artifactId>
+    <version>5.0.6-SNAPSHOT</version>
+    <configuration>
+        <mainClass>com.example.YourApplication</mainClass>
+    </configuration>
+    <executions>
+        <execution>
+            <goals>
+                <goal>generate</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+Run `mvn springdoc:generate` (or your normal build) to generate the spec.
+
+See the dedicated module READMEs for full configuration and options:
+[Gradle plugin](springdoc-openapi-gradle-plugin/README.md) and
+[Maven plugin](springdoc-openapi-maven-plugin/README.md).
 
 # Acknowledgements
 
