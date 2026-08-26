@@ -34,8 +34,13 @@ jobs:
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
 
-      - name: Build with Maven
-        run: ./mvnw --no-transfer-progress -B -T 1C install --file pom.xml
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: ${{ github.event_name == 'pull_request' }}
+
+      - name: Build and test plugins
+        uses: ./.github/actions/build-and-test-plugins
 
       - name: Deploy SNAPSHOT to Maven Central
         if: github.event_name == 'push' && matrix.java == 17
@@ -43,7 +48,7 @@ jobs:
           MY_POM_VERSION=$(./mvnw -q -DforceStdout help:evaluate -Dexpression=project.version --non-recursive)
           echo "POM VERSION: $MY_POM_VERSION"
           if [[ $MY_POM_VERSION =~ ^.*SNAPSHOT$ ]]; then
-            ./mvnw --no-transfer-progress -B -T 1C -DskipTests deploy -e
+            ./mvnw --no-transfer-progress -B -T 1C -Dinvoker.skip=true -DskipTests deploy -e
           else
             echo "Not a SNAPSHOT version, skipping deployment."
           fi

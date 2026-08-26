@@ -28,6 +28,9 @@ echo "Bumping version to $NEXT_SNAPSHOT"
 # Update all POMs in one go
 ./mvnw versions:set -DnewVersion="${NEXT_SNAPSHOT}" -DgenerateBackupPoms=false
 
+# Update gradle.properties
+sed -i "s/version=.*/version=${NEXT_SNAPSHOT}/" springdoc-openapi-gradle-plugin/gradle.properties
+
 # Commit and push
 git config user.email "action@github.com"
 git config user.name "GitHub Action"

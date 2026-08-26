@@ -38,7 +38,9 @@ jobs:
           languages: java
 
       - name: Build with Maven
-        run: ./mvnw --no-transfer-progress -B -T 1C install --file pom.xml
+        # CodeQL only needs the source built for analysis; the maven-plugin's invoker
+        # ITs already run in the main Build workflow (see maven-install action).
+        uses: ./.github/actions/maven-install
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
