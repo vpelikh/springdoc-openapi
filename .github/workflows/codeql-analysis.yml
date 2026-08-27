@@ -22,9 +22,6 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 2
-      - run: git checkout HEAD^2
-        if: ${{ github.event_name == 'pull_request' }}
-
       - name: Set up Java
         uses: actions/setup-java@v5
         with:
@@ -38,9 +35,12 @@ jobs:
           languages: java
 
       - name: Build with Maven
-        # CodeQL only needs the source built for analysis; the maven-plugin's invoker
-        # ITs already run in the main Build workflow (see maven-install action).
+        # CodeQL only needs the source built for analysis, so tests are skipped.
+        # The maven-plugin's invoker ITs already run in the main Build workflow
+        # (see the maven-install action used by build-and-test-plugins).
         uses: ./.github/actions/maven-install
+        with:
+          skip-tests: 'true'
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4

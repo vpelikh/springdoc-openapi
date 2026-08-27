@@ -3,10 +3,27 @@ description: >
   Builds and installs the whole Maven reactor to the local repo, skipping the
   maven-plugin's invoker-plugin integration tests. Those run serially afterwards
   via build-and-test-plugins.
+inputs:
+  skip-tests:
+    description: >
+      Set to 'true' to skip executing unit/integration tests (surefire)
+      during the install. Intended for the CodeQL build, which only needs the
+      compiled classes for analysis.
+    required: false
+    default: 'false'
 runs:
   using: "composite"
   steps:
     - name: Maven install
       shell: bash
+      env:
+        SKIP_TESTS: ${{ inputs.skip-tests }}
       run: |
-        ./mvnw --no-transfer-progress -B -T 1C -Dinvoker.skip=true install --file pom.xml
+        SKIP_TEST_FLAG=""
+        if [ "$SKIP_TESTS" = "true" ]; then
+          SKIP_TEST_FLAG="-DskipTests"
+        fi
+        # -Daether.syncContext.named.time raises the local-repo lock timeout so
+        # parallel (-T 1C) modules forking test JVMs do not deadlock on shared
+        # reactor artifacts (see CodeQL-Build lock-timeout failures).
+        ./mvnw --no-transfer-progress -B -T 1C -Dinvoker.skip=true -Daether.syncContext.named.time=3000 $SKIP_TEST_FLAG install --file pom.xml
