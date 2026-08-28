@@ -103,15 +103,21 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Check out gh-pages into a separate path. A checkout into the workspace root
+      # would swap the working tree to the gh-pages content (no .github), which makes
+      # the composite "Build and test plugins" action's post step fail because its
+      # action.yml metadata can no longer be found at job end.
       - name: Checkout gh-pages
         uses: actions/checkout@v7
         with:
           ref: "gh-pages"
           fetch-depth: 0
+          path: gh-pages
 
       - name: Publish javadocs
         if: success()
         run: |
+          cd gh-pages
           TMPDIR="$(dirname -- "${0}")"
           . $TMPDIR/publish-javadocs.sh
 
