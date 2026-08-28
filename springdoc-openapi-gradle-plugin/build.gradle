@@ -85,4 +85,8 @@ publishing {
 
 test {
     useJUnitPlatform()
+    // Expose the resolved project version so the functional tests depend on the
+    // artifacts that were actually built/installed (e.g. 5.1.0 at release time,
+    // 5.1.0-SNAPSHOT during development) instead of a hardcoded version.
+    systemProperty 'springdocVersion', project.version
 }
