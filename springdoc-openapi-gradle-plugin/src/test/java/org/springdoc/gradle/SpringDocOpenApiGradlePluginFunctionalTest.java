@@ -48,7 +48,7 @@ class SpringDocOpenApiGradlePluginFunctionalTest {
 
                 dependencies {
                 implementation 'org.springframework.boot:spring-boot-starter-webflux:4.1.1'
-                implementation 'io.github.vpelikh:springdoc-openapi-starter-webflux-api:5.0.6-SNAPSHOT'
+                implementation 'io.github.vpelikh:springdoc-openapi-starter-webflux-api:5.1.0-SNAPSHOT'
                 }
 
                 openApiGenerate {
@@ -88,7 +88,7 @@ class SpringDocOpenApiGradlePluginFunctionalTest {
 
                 dependencies {
                 implementation 'org.springframework.boot:spring-boot-starter-web:4.1.1'
-                implementation 'io.github.vpelikh:springdoc-openapi-starter-webmvc-api:5.0.6-SNAPSHOT'
+                implementation 'io.github.vpelikh:springdoc-openapi-starter-webmvc-api:5.1.0-SNAPSHOT'
                 }
 
                 openApiGenerate {
@@ -130,7 +130,7 @@ class SpringDocOpenApiGradlePluginFunctionalTest {
 
                 dependencies {
                 implementation 'org.springframework.boot:spring-boot-starter-webflux:4.1.1'
-                implementation 'io.github.vpelikh:springdoc-openapi-starter-webflux-api:5.0.6-SNAPSHOT'
+                implementation 'io.github.vpelikh:springdoc-openapi-starter-webflux-api:5.1.0-SNAPSHOT'
                 }
 
                 openApiGenerate {
@@ -170,7 +170,7 @@ class SpringDocOpenApiGradlePluginFunctionalTest {
 
                 dependencies {
                 implementation 'org.springframework.boot:spring-boot-starter-webflux:4.1.1'
-                implementation 'io.github.vpelikh:springdoc-openapi-starter-webflux-api:5.0.6-SNAPSHOT'
+                implementation 'io.github.vpelikh:springdoc-openapi-starter-webflux-api:5.1.0-SNAPSHOT'
                 }
 
                 openApiGenerate {

@@ -341,7 +341,7 @@ Apply the plugin and set the application's main class:
 ```groovy
 plugins {
     id 'java'
-    id 'io.github.vpelikh.springdoc-openapi-gradle-plugin' version '5.0.6-SNAPSHOT'
+    id 'io.github.vpelikh.springdoc-openapi-gradle-plugin' version '5.1.0-SNAPSHOT'
 }
 
 repositories {
@@ -351,7 +351,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux:4.1.1'
-    implementation 'io.github.vpelikh:springdoc-openapi-starter-webflux-api:5.0.6-SNAPSHOT'
+    implementation 'io.github.vpelikh:springdoc-openapi-starter-webflux-api:5.1.0-SNAPSHOT'
 }
 
 openApiGenerate {
@@ -369,7 +369,7 @@ Bind the goal to the `package` phase or invoke it directly:
 <plugin>
     <groupId>io.github.vpelikh</groupId>
     <artifactId>springdoc-openapi-maven-plugin</artifactId>
-    <version>5.0.6-SNAPSHOT</version>
+    <version>5.1.0-SNAPSHOT</version>
     <configuration>
         <mainClass>com.example.YourApplication</mainClass>
     </configuration>

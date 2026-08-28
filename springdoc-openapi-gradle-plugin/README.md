@@ -41,7 +41,7 @@ class:
 ```groovy
 plugins {
     id 'java'
-    id 'io.github.vpelikh.springdoc-openapi-gradle-plugin' version '5.0.6-SNAPSHOT'
+    id 'io.github.vpelikh.springdoc-openapi-gradle-plugin' version '5.1.0-SNAPSHOT'
 }
 
 repositories {
@@ -51,7 +51,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux:4.1.1'
-    implementation 'io.github.vpelikh:springdoc-openapi-starter-webflux-api:5.0.6-SNAPSHOT'
+    implementation 'io.github.vpelikh:springdoc-openapi-starter-webflux-api:5.1.0-SNAPSHOT'
 }
 
 openApiGenerate {
@@ -109,7 +109,7 @@ contains the `/pets` paths.
 ## Notes / limitations
 
 - Uses the fork's modules (`io.github.vpelikh:springdoc-openapi-starter-webflux-api` /
-  `springdoc-openapi-starter-webmvc-api`) at `5.0.6-SNAPSHOT`; install them and the shared
+  `springdoc-openapi-starter-webmvc-api`) at `5.1.0-SNAPSHOT`; install them and the shared
   `springdoc-openapi-generator-worker` into `~/.m2` (via the root Maven build) first.
 - Supports both WebFlux (reactive, fully serverless) and WebMvc (servlet, ephemeral auto-stopped
   embedded server). The stack is detected automatically from the app's classpath.

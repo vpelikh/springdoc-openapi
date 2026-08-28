@@ -28,7 +28,7 @@ Bind the goal to the `package` (default) phase or invoke it directly:
 <plugin>
     <groupId>io.github.vpelikh</groupId>
     <artifactId>springdoc-openapi-maven-plugin</artifactId>
-    <version>5.0.6-SNAPSHOT</version>
+    <version>5.1.0-SNAPSHOT</version>
     <configuration>
         <mainClass>com.example.YourApplication</mainClass>
     </configuration>
