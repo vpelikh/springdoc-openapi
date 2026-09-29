@@ -23,7 +23,25 @@ public final class GeneratorWorkerMain {
     private GeneratorWorkerMain() {
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
+        int exitCode = 0;
+        try {
+            run(args);
+        }
+        catch (Throwable t) {
+            // Print to stderr so the failure is visible even if the app reconfigured logging.
+            t.printStackTrace(System.err);
+            exitCode = 1;
+        }
+        // The worker is a one-shot forked JVM. The booted application may leave non-daemon
+        // threads running (e.g. a Vert.x instance or thread pool that is not shut down when the
+        // application context closes), which would otherwise keep this JVM alive indefinitely
+        // after the spec has been written. The parent build waits for the process to exit (and
+        // for its stdout to reach EOF), so exit explicitly instead of relying on natural exit.
+        System.exit(exitCode);
+    }
+
+    private static void run(String[] args) throws Exception {
         if (args.length < 2) {
             throw new IllegalArgumentException(
                     "Usage: GeneratorWorkerMain <mainClass> <outputDir> [outputFileName] [format]");

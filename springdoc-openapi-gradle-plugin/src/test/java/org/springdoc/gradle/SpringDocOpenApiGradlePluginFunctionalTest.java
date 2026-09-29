@@ -78,6 +78,32 @@ class SpringDocOpenApiGradlePluginFunctionalTest {
     }
 
     @Test
+    void terminatesWorkerWhenAppLeaksNonDaemonThread() throws IOException {
+        // Regression test: an app that leaves a non-daemon thread running after its context is
+        // closed used to keep the forked worker JVM alive forever, hanging the build (the stdout
+        // read loop blocked and the worker timeout was only checked afterwards). The worker must
+        // now force the JVM to exit once the spec is written.
+        copyRecursively(Paths.get("src/test/resources/sample-app-leaking-thread"), testProjectDir);
+
+        Files.writeString(testProjectDir.resolve("settings.gradle"), "rootProject.name = 'sample-app-leaking-thread'\n");
+        Files.writeString(testProjectDir.resolve("build.gradle"),
+                buildGradle("webflux", """
+                        mainClass = 'test.SampleApp'
+                        """));
+
+        BuildResult result = GradleRunner.create()
+                .withProjectDir(testProjectDir.toFile())
+                .withArguments("generateOpenApi", "--stacktrace")
+                .withPluginClasspath()
+                .build();
+
+        assertTrue(result.task(":generateOpenApi").getOutcome() == SUCCESS);
+        Path spec = testProjectDir.resolve("build/docs/openapi.json");
+        assertTrue(Files.exists(spec), "Expected generated spec at " + spec + " but it does not exist");
+        assertTrue(Files.readString(spec).contains("/pets"), "expected /pets path in spec");
+    }
+
+    @Test
     void skipFlagProducesNoSpec() throws IOException {
         Path sampleApp = Paths.get("src/test/resources/sample-app-webflux");
         copyRecursively(sampleApp, testProjectDir);
