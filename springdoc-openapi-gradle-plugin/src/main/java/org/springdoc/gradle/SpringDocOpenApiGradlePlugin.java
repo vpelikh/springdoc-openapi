@@ -42,8 +42,9 @@ public class SpringDocOpenApiGradlePlugin implements Plugin<Project> {
 
     private void configureForJavaProject(Project project, OpenApiGenerateExtension extension) {
         // Configuration carrying the thin worker jar (and its transitive runtime deps).
+        // (Not marked setVisible(false): that API is deprecated and scheduled for removal in
+        // Gradle 11, and visibility does not affect resolution.)
         Configuration generatorConfig = project.getConfigurations().create("springdocGenerator")
-                .setVisible(false)
                 .setTransitive(true);
         // Deliberately does NOT add a springdoc stack API as a safety net: forcing the
         // webflux-api jar onto the fork classpath of a WebMvc app would flip springdoc's
