@@ -74,6 +74,11 @@ The spec is written to `${project.build.directory}/docs/openapi.json` by default
 4. It invokes springdoc's matching `OpenApi*Resource` with a mock request, writes the JSON/YAML
    document, and shuts the context down.
 
+The fork is a one-shot JVM: the worker exits explicitly once the document is written, so an
+application that leaves non-daemon threads running after its context closes (e.g. a Vert.x
+instance or a custom thread pool) cannot keep the build hanging. If the worker still does not
+finish within `timeout`, a watchdog force-kills it and the goal fails with a clear message.
+
 ### Generating apps that need infrastructure
 
 The worker boots the application's real context, so beans needing external resources (a database,

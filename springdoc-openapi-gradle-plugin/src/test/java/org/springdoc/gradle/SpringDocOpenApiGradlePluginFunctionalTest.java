@@ -78,6 +78,57 @@ class SpringDocOpenApiGradlePluginFunctionalTest {
     }
 
     @Test
+    void terminatesWorkerWhenAppLeaksNonDaemonThread() throws IOException {
+        // Regression test: an app that leaves a non-daemon thread running after its context is
+        // closed used to keep the forked worker JVM alive forever, hanging the build (the stdout
+        // read loop blocked and the worker timeout was only checked afterwards). The worker must
+        // now force the JVM to exit once the spec is written.
+        copyRecursively(Paths.get("src/test/resources/sample-app-leaking-thread"), testProjectDir);
+
+        Files.writeString(testProjectDir.resolve("settings.gradle"), "rootProject.name = 'sample-app-leaking-thread'\n");
+        Files.writeString(testProjectDir.resolve("build.gradle"),
+                buildGradle("webflux", """
+                        mainClass = 'test.SampleApp'
+                        """));
+
+        BuildResult result = GradleRunner.create()
+                .withProjectDir(testProjectDir.toFile())
+                .withArguments("generateOpenApi", "--stacktrace")
+                .withPluginClasspath()
+                .build();
+
+        assertTrue(result.task(":generateOpenApi").getOutcome() == SUCCESS);
+        Path spec = testProjectDir.resolve("build/docs/openapi.json");
+        assertTrue(Files.exists(spec), "Expected generated spec at " + spec + " but it does not exist");
+        assertTrue(Files.readString(spec).contains("/pets"), "expected /pets path in spec");
+    }
+
+    @Test
+    void worksWhenSpringdocPluginIsAppliedBeforeJavaPlugin() throws IOException {
+        // Regression test: the plugin used to look up the 'main' source set during apply(),
+        // so listing it before the 'java' plugin failed with
+        // "Extension of type 'SourceSetContainer' does not exist".
+        copyRecursively(Paths.get("src/test/resources/sample-app-webflux"), testProjectDir);
+
+        Files.writeString(testProjectDir.resolve("settings.gradle"), "rootProject.name = 'sample-app-plugin-order'\n");
+        Files.writeString(testProjectDir.resolve("build.gradle"),
+                buildGradle("webflux", """
+                        mainClass = 'test.SampleApp'
+                        """, true));
+
+        BuildResult result = GradleRunner.create()
+                .withProjectDir(testProjectDir.toFile())
+                .withArguments("generateOpenApi", "--stacktrace")
+                .withPluginClasspath()
+                .build();
+
+        assertTrue(result.task(":generateOpenApi").getOutcome() == SUCCESS);
+        Path spec = testProjectDir.resolve("build/docs/openapi.json");
+        assertTrue(Files.exists(spec), "Expected generated spec at " + spec + " but it does not exist");
+        assertTrue(Files.readString(spec).contains("/pets"), "expected /pets path in spec");
+    }
+
+    @Test
     void skipFlagProducesNoSpec() throws IOException {
         Path sampleApp = Paths.get("src/test/resources/sample-app-webflux");
         copyRecursively(sampleApp, testProjectDir);
@@ -138,13 +189,32 @@ class SpringDocOpenApiGradlePluginFunctionalTest {
      * @param openApiExtension the extra {@code openApiGenerate { ... }} block body.
      */
     private String buildGradle(String starterModule, String openApiExtension) {
+        return buildGradle(starterModule, openApiExtension, false);
+    }
+
+    /**
+     * Builds the sample app build.gradle for the functional tests.
+     * @param starterModule springdoc starter module suffix, e.g. "webflux" or "webmvc".
+     * @param openApiExtension the extra {@code openApiGenerate { ... }} block body.
+     * @param springdocPluginFirst when {@code true}, the springdoc plugin is listed before
+     *                             {@code java}, exercising plugin application order.
+     */
+    private String buildGradle(String starterModule, String openApiExtension, boolean springdocPluginFirst) {
         String bootDependency = "implementation 'org.springframework.boot:spring-boot-starter-" + starterModule + ":4.1.1'\n";
         String springdocDependency =
                 "implementation 'io.github.vpelikh:springdoc-openapi-starter-" + starterModule + "-api:" + SPRINGDOC_VERSION + "'\n";
-        return """
-                plugins {
+        String pluginsBlock = springdocPluginFirst
+                ? """
+                    id 'io.github.vpelikh.springdoc-openapi-gradle-plugin'
+                    id 'java'
+                """
+                : """
                     id 'java'
                     id 'io.github.vpelikh.springdoc-openapi-gradle-plugin'
+                """;
+        return """
+                plugins {
+                """ + pluginsBlock + """
                 }
 
                 repositories {

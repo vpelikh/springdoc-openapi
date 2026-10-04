@@ -95,6 +95,11 @@ The plugin:
    JSON/YAML document, writes it to the configured output, and closes the context.
 5. The plugin task is `@Cacheable`, so unchanged inputs are up-to-date.
 
+The fork is a one-shot JVM: the worker exits explicitly once the document is written, so an
+application that leaves non-daemon threads running after its context closes (e.g. a Vert.x
+instance or a custom thread pool) cannot keep the build hanging. If the worker still does not
+finish within `timeoutSeconds`, a watchdog force-kills it and the task fails with a clear message.
+
 ## Building & testing
 
 From this directory:

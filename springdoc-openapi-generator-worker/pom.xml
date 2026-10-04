@@ -13,7 +13,10 @@
 		<!-- Thin jar: no classes are bundled. It reuses the target app's own spring/springdoc
 		     classes at runtime, so it must NOT force either web stack onto the fork classpath
 		     (that would flip Spring Boot's deduced web application type). Both springdoc stack
-		     APIs are therefore compile-only; the worker invokes the resource via reflection. -->
+		     APIs are therefore compile-only. The worker is compiled against them but only loads
+		     the stack selected for the target app at runtime (GeneratorWorkerMain picks one
+		     worker class; the other is never loaded), so a fork only ever needs the one stack
+		     its own dependencies already provide. -->
 		<dependency>
 			<groupId>io.github.vpelikh</groupId>
 			<artifactId>springdoc-openapi-starter-webflux-api</artifactId>
