@@ -161,8 +161,33 @@ public class GenerateOpenApiMojo extends AbstractMojo {
 		ProcessBuilder pb = new ProcessBuilder(command);
 		pb.redirectErrorStream(true);
 		Process process = null;
+		Thread watchdog = null;
 		try {
 			process = pb.start();
+			final Process worker = process;
+			final java.util.concurrent.atomic.AtomicBoolean timedOut =
+					new java.util.concurrent.atomic.AtomicBoolean(false);
+			// Enforce the timeout from a separate thread. Streams below block on readLine() until
+			// the worker closes stdout, which for a worker that never exits never happens; a
+			// post-hoc process.waitFor(timeout, ...) would therefore never be reached. The
+			// watchdog waits concurrently and force-kills the worker, which closes its stdout and
+			// unblocks the reader.
+			watchdog = new Thread(() -> {
+				try {
+					if (!worker.waitFor(timeout, java.util.concurrent.TimeUnit.SECONDS)) {
+						timedOut.set(true);
+						getLog().error("Springdoc generator worker did not finish within "
+								+ timeout + "s and was terminated");
+						worker.destroyForcibly();
+					}
+				}
+				catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			}, "springdoc-openapi-generator-watchdog");
+			watchdog.setDaemon(true);
+			watchdog.start();
+
 			try (BufferedReader reader = new BufferedReader(
 					new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
 				String line;
@@ -170,9 +195,8 @@ public class GenerateOpenApiMojo extends AbstractMojo {
 					getLog().info(line);
 				}
 			}
-			boolean finished = process.waitFor(timeout, java.util.concurrent.TimeUnit.SECONDS);
-			if (!finished) {
-				process.destroyForcibly();
+			watchdog.join();
+			if (timedOut.get()) {
 				throw new MojoExecutionException("Springdoc generator worker did not finish within "
 						+ timeout + "s and was terminated");
 			}
@@ -182,17 +206,22 @@ public class GenerateOpenApiMojo extends AbstractMojo {
 			}
 		}
 		catch (IOException e) {
-			if (process != null) {
-				process.destroyForcibly();
-			}
+			stopWorker(process, watchdog);
 			throw new MojoExecutionException("Failed to launch springdoc generator worker", e);
 		}
 		catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
-			if (process != null) {
-				process.destroyForcibly();
-			}
+			stopWorker(process, watchdog);
 			throw new MojoExecutionException("Springdoc generator worker interrupted", e);
+		}
+	}
+
+	private static void stopWorker(Process process, Thread watchdog) {
+		if (watchdog != null) {
+			watchdog.interrupt();
+		}
+		if (process != null && process.isAlive()) {
+			process.destroyForcibly();
 		}
 	}
 

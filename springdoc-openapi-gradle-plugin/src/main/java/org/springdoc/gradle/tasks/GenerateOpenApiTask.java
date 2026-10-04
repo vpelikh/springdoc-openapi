@@ -152,20 +152,44 @@ public abstract class GenerateOpenApiTask extends DefaultTask {
 
         getLogger().lifecycle("Launching generator worker JVM (" + javaBin + ") for main class " + mainClass);
         Process process = null;
+        Thread watchdog = null;
         try {
             ProcessBuilder pb = new ProcessBuilder(command);
             pb.redirectErrorStream(true);
             process = pb.start();
+            final Process worker = process;
+            final int timeout = timeoutSeconds.getOrElse(120);
+            final java.util.concurrent.atomic.AtomicBoolean timedOut =
+                    new java.util.concurrent.atomic.AtomicBoolean(false);
+            // Enforce the timeout from a separate thread. Streams below block on readLine() until
+            // the worker closes stdout, which for a worker that never exits never happens; a
+            // post-hoc process.waitFor(timeout, ...) would therefore never be reached. The
+            // watchdog waits concurrently and force-kills the worker, which closes its stdout and
+            // unblocks the reader.
+            watchdog = new Thread(() -> {
+                try {
+                    if (!worker.waitFor(timeout, TimeUnit.SECONDS)) {
+                        timedOut.set(true);
+                        getLogger().error("Generator worker did not finish within " + timeout
+                                + "s and was terminated");
+                        worker.destroyForcibly();
+                    }
+                }
+                catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }, "springdoc-openapi-generator-watchdog");
+            watchdog.setDaemon(true);
+            watchdog.start();
+
             try (var reader = new java.io.BufferedReader(new java.io.InputStreamReader(process.getInputStream()))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     getLogger().lifecycle(line);
                 }
             }
-            int timeout = timeoutSeconds.getOrElse(120);
-            boolean finished = process.waitFor(timeout, TimeUnit.SECONDS);
-            if (!finished) {
-                process.destroyForcibly();
+            watchdog.join();
+            if (timedOut.get()) {
                 throw new GradleException("Generator worker did not finish within " + timeout + "s and was terminated");
             }
             int exit = process.exitValue();
@@ -174,14 +198,22 @@ public abstract class GenerateOpenApiTask extends DefaultTask {
             }
         }
         catch (IOException e) {
+            stopWorker(process, watchdog);
             throw new GradleException("Failed to launch generator worker: " + e.getMessage(), e);
         }
         catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            if (process != null) {
-                process.destroyForcibly();
-            }
+            stopWorker(process, watchdog);
             throw new GradleException("Generator worker interrupted", e);
+        }
+    }
+
+    private static void stopWorker(Process process, Thread watchdog) {
+        if (watchdog != null) {
+            watchdog.interrupt();
+        }
+        if (process != null && process.isAlive()) {
+            process.destroyForcibly();
         }
     }
 }

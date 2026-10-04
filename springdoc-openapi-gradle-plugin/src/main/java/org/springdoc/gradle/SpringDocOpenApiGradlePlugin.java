@@ -27,9 +27,24 @@ public class SpringDocOpenApiGradlePlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
+        // The extension is registered eagerly so it can be configured regardless of plugin order.
+        OpenApiGenerateExtension extension = project.getExtensions()
+                .create("openApiGenerate", OpenApiGenerateExtension.class, project.getObjects());
+        extension.getOutputDir().convention(project.getLayout().getBuildDirectory().dir("docs"));
+
+        // The task needs the `main` source set (its output and runtime classpath), so wire
+        // everything once the `java` plugin is present. Reacting to the plugin being applied
+        // (rather than requiring it up front) makes the order of the two plugins irrelevant:
+        // `plugins { id 'io.github.vpelikh...'; id 'java' }` works as well as the reverse.
+        project.getPluginManager().withPlugin("java", applied ->
+                configureForJavaProject(project, extension));
+    }
+
+    private void configureForJavaProject(Project project, OpenApiGenerateExtension extension) {
         // Configuration carrying the thin worker jar (and its transitive runtime deps).
+        // (Not marked setVisible(false): that API is deprecated and scheduled for removal in
+        // Gradle 11, and visibility does not affect resolution.)
         Configuration generatorConfig = project.getConfigurations().create("springdocGenerator")
-                .setVisible(false)
                 .setTransitive(true);
         // Deliberately does NOT add a springdoc stack API as a safety net: forcing the
         // webflux-api jar onto the fork classpath of a WebMvc app would flip springdoc's
@@ -40,10 +55,6 @@ public class SpringDocOpenApiGradlePlugin implements Plugin<Project> {
                 project.getDependencies().create(
                         "io.github.vpelikh:springdoc-openapi-generator-worker:" + PLUGIN_VERSION)
         )));
-
-        OpenApiGenerateExtension extension = project.getExtensions()
-                .create("openApiGenerate", OpenApiGenerateExtension.class, project.getObjects());
-        extension.getOutputDir().convention(project.getLayout().getBuildDirectory().dir("docs"));
 
         SourceSet mainSourceSet = project.getExtensions()
                 .getByType(SourceSetContainer.class)
