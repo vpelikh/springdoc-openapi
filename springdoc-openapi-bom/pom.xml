@@ -60,6 +60,11 @@
 				<artifactId>springdoc-openapi-starter-webflux-mcp</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>io.github.vpelikh</groupId>
+				<artifactId>springdoc-openapi-generator-worker</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			<!-- swagger dependencies, so that modules holding only the annotations stay in lockstep -->
 			<dependency>
 				<groupId>io.swagger.core.v3</groupId>
